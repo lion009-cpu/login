@@ -1,7 +1,6 @@
 {
   "name": "login",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "bin": {
     "login": "www.js"
@@ -45,6 +44,7 @@
     "inherits": "2.0.3",
     "ipaddr.js": "1.9.1",
     "jake": "10.8.2",
+    "killall": "1.0.4",
     "media-typer": "0.3.0",
     "merge-descriptors": "1.0.1",
     "methods": "1.1.2",
@@ -72,11 +72,11 @@
     "type-is": "1.6.18",
     "unpipe": "1.0.0",
     "utils-merge": "1.0.1",
-    "vary": "1.1.2"
+    "vary": "1.1.2",
+    "yarn": "1.22.10"
   },
-  "devDependencies": {},
   "scripts": {
-    "start": "node ./bin/www.js",
+    "start": "supervisor ./bin/www.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -86,5 +86,9 @@
   "repository": {
     "type": "git",
     "url": ""
+  },
+  "description": "",
+  "devDependencies": {
+    "nodemon": "2.0.8"
   }
 }
