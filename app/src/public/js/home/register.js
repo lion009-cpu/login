@@ -32,7 +32,6 @@ function register() {
               alert(res.msg);
           }
       }).catch((err) => {
-          console.error(new Error("회원가입중 에러 발생"));
-          console.log(err);
+          console.error("회원가입중 에러 발생");
       });
 }
