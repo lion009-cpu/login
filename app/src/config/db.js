@@ -7,12 +7,13 @@ const db = mysql.createConnection({
     database: process.env.DB_DATABASE,
 });
 
+const logger = require("../config/logger");
+
 db.connect((err) => {  
     if(!err) {  
-        console.log("Database is connected ... \n\n");    
+        logger.info("Database is connected ... \n\n");    
     } else {  
-        console.log("Error connecting database ... \n\n");  
-        console.log(db);
+        logger.info("Error connecting database ... \n\n");  
     }  
 });
 

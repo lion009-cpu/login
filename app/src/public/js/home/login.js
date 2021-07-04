@@ -7,6 +7,9 @@ const id = document.querySelector("#id"),
 loginbtn.addEventListener("click", login);
 
 function login() {
+    if(!id.value) return alert("닉네임을 입력해 주십시요.");
+    if(!pwd.value) return alert("비밀번호를 입력해 주십시요.");
+
     const req = {
         id: id.value,
         pwd: pwd.value,
@@ -23,10 +26,9 @@ function login() {
           if(res.success) {
               location.href = "/";              
           } else {
+              if(res.err) return alert(res.err);
               alert(res.msg);
           }
       }).catch((err) => {
-          console.log(err);
-          console.error("로그인중 에러 발생");
       });
 }

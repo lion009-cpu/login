@@ -29,9 +29,9 @@ function register() {
           if(res.success) {
               location.href = "/login";              
           } else {
-              alert(res.msg);
+            if(res.err) return alert(res.err);
+            alert(res.msg);
           }
       }).catch((err) => {
-          console.error("회원가입중 에러 발생");
       });
 }

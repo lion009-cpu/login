@@ -5,6 +5,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require('morgan');
+const logger = require('./src/config/logger');
 
 const app = express();
 dotenv.config();
@@ -19,8 +20,8 @@ app.use(express.static(`${__dirname}/src/public`));
 
 app.use(express.urlencoded({ extended : true }));
 app.use(express.json());
-app.use(morgan('dev'));
-app.use(morgan('common', { stream: accessLogStream }));
+app.use(morgan('tiny', { stream: logger.stream }));
+// app.use(morgan('common', { stream: accessLogStream }));
 
 app.use("/", home);
 
