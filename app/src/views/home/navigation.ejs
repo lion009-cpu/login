@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home/navigation.css">
+    <script src="/js/home/navigation.js" defer></script>
+    <title>환영</title>
+</head>
+<body>
+    <div class="navigation-wrap">
+        <div class="navigation-catchphrase">
+            <strong>아픔을 함께하면 반이 됩니다.</strong><br><br>
+        </div>
+        <div class="navigation-welcome">
+            <strong>치유에 참여하심을 축하드립니다.</strong><br><br>
+        </div>
+        <div class="navigation-subtitle">
+            <strong>누구로 참여하고 싶으신가요?</strong><br><br>            
+        </div>
+        <div class="navigation-list-wrap">
+            <!-- <div class="navition-need-hands">
+                <a href="#" class="need">도와주세요!!!</a>
+            </div>
+            <div class="navigation-give-hands">
+                <a href="#" class="need">도와드릴게요!!!</a>
+            </div>
+            <div class="navigation-guest">
+                <a href="#" class="need">둘러볼게요!!!</a>
+            </div> -->
+            <% for(var i=0; i<data.length; i++){ %> 
+                <a href="#" class="need"><p><%= data[i].code_nm %></p><br></a>                
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

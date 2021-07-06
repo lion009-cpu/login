@@ -2,6 +2,7 @@
 
 const logger = require("../../config/logger");
 const User = require("../../models/User");
+const Hint = require("../../models/Hint");
 
 const output = {    
     hello: (req, res) =>{
@@ -17,6 +18,15 @@ const output = {
     register: (req, res) => {
         logger.info(`GET /register 304 "가입 화면으로 이동"`);
         res.render("home/register");
+    },
+
+    navigation: async (req, res) => {
+        const hint = new Hint();
+        const response = await hint.navigation();
+        const navi = JSON.stringify(response); 
+
+        logger.info(`GET /navigation 304 "안내 화면으로 이동"`);
+        res.render("home/navigation", {data:response});
     },
 }
 
