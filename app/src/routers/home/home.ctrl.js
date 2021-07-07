@@ -3,6 +3,7 @@
 const logger = require("../../config/logger");
 const User = require("../../models/User");
 const Hint = require("../../models/Hint");
+const Symptom = require("../../models/Symptom");
 
 const output = {    
     hello: (req, res) =>{
@@ -27,6 +28,15 @@ const output = {
 
         logger.info(`GET /navigation 304 "안내 화면으로 이동"`);
         res.render("home/navigation", {data:response});
+    },
+
+    symptom: async (req, res) => {
+        const symptom = new Symptom();
+        const response = await symptom.navigation();
+        const navi = JSON.stringify(response); 
+
+        logger.info(`GET /symptom 304 "대표증상 화면으로 이동"`);
+        res.render("home/symptom", {data:response});
     },
 }
 

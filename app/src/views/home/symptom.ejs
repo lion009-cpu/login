@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home/symptom.css">
+    <script src="/js/home/symptom.js" defer></script>
+    <title>대표증상</title>
+</head>
+<body>
+    <div class="navigation-wrap">        
+        <% for(var i=0; i<data.length; i++){ %> 
+            <a href="#" class="need"><p><%= data[i].code_nm %></p><br></a>                
+        <% } %>
+    </div>
+</body>
+</html>

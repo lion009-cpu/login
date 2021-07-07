@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 20px;
+}
+
+ul, li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color:inherit;
+}
+
+.navigation-wrap {
+    margin-top: 10px;
+    width: 360px;
+    padding: 8% 0 0;
+    margin: auto;
+    text-align: center;
+}
