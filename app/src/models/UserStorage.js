@@ -16,10 +16,10 @@ class UserStorage {
     }
 
     static async save(userInfo) {
-        return new Promise((resolve, reject) => {
-            const query = "INSERT INTO users(id, eff_end_dt, user_password, e_mail, gender, age, grade, eff_sta_dt) VALUES(?,?,?,?,?,?,?,date_format(now(), '%Y%m%d'));";
+        return new Promise((resolve, reject) => {            
+            const query = "INSERT INTO users(id, eff_end_dt, password, e_mail, gender, age, grade, eff_sta_dt) VALUES(?,?,?,?,?,?,?,date_format(now(), '%Y%m%d'));";
             db.query(query, [userInfo.id, '99991231', 
-                     userInfo.pwd, 'a@a.com', 'F', '30', '1'], (err) => {
+                     userInfo.pwd, userInfo.eMail, userInfo.zender, '30', '1'], (err) => {
                 if(err) reject(`${err}`);
                 else resolve({success: true});
             });  

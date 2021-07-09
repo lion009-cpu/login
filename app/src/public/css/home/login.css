@@ -4,7 +4,7 @@
   width: 360px;
   padding: 8% 0 0;
   margin: auto;
-}
+ } 
 .form {
   position: relative;
   z-index: 1;
@@ -53,9 +53,6 @@
   color: #4CAF50;
   text-decoration: none;
 }
-.form .register-form {
-  display: none;
-}
 .container {
   position: relative;
   z-index: 1;
@@ -88,6 +85,68 @@
 }
 .container .info span .fa {
   color: #EF3B3A;
+}
+.form-radio {
+  position: relative;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  /* text-align: left; */
+}
+/*radio 수평 배치 */
+.form-radio-inline .form-radio-label {
+  display: inline-block;
+  margin-right: 2rem;
+}
+.form-radio-button {
+  position: absolute;
+  left: 0;
+  cursor: pointer;
+  display: block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #999;
+}
+.form-radio-inline .form-radio-label {
+  display: inline-block;
+  cursor: pointer;
+  margin-right: 2rem; 
+}
+.form-radio-button {
+  position: absolute;
+  left: 0;
+  cursor: pointer;
+  display: block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: #999;
+}
+.form #button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #4CAF50;
+  width: 80%;
+  border: 0;
+  margin: 0 auto;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.form-radio-label:hover i {
+  color: #337ab7;
+}
+.form-radio-label span {
+  display: block;
+}
+.form-radio-field:checked ~ .form-radio-button::before {
+  color: #337ab7;
 }
 body {
   background: #76b852; /* fallback for old browsers */

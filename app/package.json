@@ -24,6 +24,7 @@
     "content-type": "1.0.4",
     "cookie": "0.4.0",
     "cookie-signature": "1.0.6",
+    "crypto": "1.0.1",
     "debug": "2.6.9",
     "depd": "1.1.2",
     "destroy": "1.0.4",
@@ -73,6 +74,7 @@
     "send": "0.17.1",
     "serve-static": "1.14.1",
     "setprototypeof": "1.1.1",
+    "sha512": "0.0.1",
     "statuses": "1.5.0",
     "supports-color": "5.5.0",
     "sync-mysql": "3.0.1",
@@ -96,8 +98,8 @@
     "type": "git",
     "url": ""
   },
-  "description": "",
   "devDependencies": {
     "nodemon": "2.0.8"
-  }
+  },
+  "description": ""
 }

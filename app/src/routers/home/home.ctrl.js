@@ -4,6 +4,7 @@ const logger = require("../../config/logger");
 const User = require("../../models/User");
 const Hint = require("../../models/Hint");
 const Symptom = require("../../models/Symptom");
+const crypto = require('crypto');
 
 const output = {    
     hello: (req, res) =>{
@@ -42,6 +43,13 @@ const output = {
 
 const process = {
     login: async (req, res) => {
+        try {
+            req.body.pwd = await crypto.createHash('sha512').update(req.body.pwd).digest('base64');
+        } catch (err) {
+            console.log(err);
+            return {success : false, err};
+        }
+
         const user = new User(req.body);
         const response = await user.login();
 
@@ -56,6 +64,12 @@ const process = {
     },
 
     register: async (req, res) => {
+        try {
+            req.body.pwd = await crypto.createHash('sha512').update(req.body.pwd).digest('base64');
+        } catch (err) {
+            return {success : false, err};
+        }
+
         const user = new User(req.body);
         const response = await user.register();
 
