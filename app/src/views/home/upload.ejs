@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home/upload.css">
+    <script src="/js/home/upload.js" defer></script>
+    <script>
+      function eraseText() {
+        document.getElementById("content").value = "";
+      }
+    </script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="upload-page">
+        <div class="form">
+          <form class="upload-form">
+            <div class = title>
+              <input id="title" type="search" placeholder="간략한 증상"/>
+              <script>
+                var $title = $('#title'), $title_clear = $('#title_clear');
+                $title.keyup(function() {
+                  console.log(('#$title').val());
+                  $("#title_clear").toggle(Boolean($(this).val()));
+                });
+                $title_clear.toggle(Boolean($title.val()));
+                $title_clear.click(function() {
+                  $("#title").val('').focus();
+                  $(this).hide();
+                });
+              </script>
+            </div>
+            <div class = content>
+              <textarea name="content" id="content" placeholder="상세한 증상을 적어주세요"></textarea>
+              <input id="clear" type="button" value="Clear" onclick="javascript:eraseText();"> 
+            </div>
+            <p id="button">글 올리기</p>
+          </form>
+        </div>
+      </div>
+</body>
+</html>
+
+<!-- Copyright (c) 2021 by Aigars Silkalns (https://codepen.io/colorlib/pen/rxddKy) -->

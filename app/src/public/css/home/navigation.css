@@ -23,6 +23,20 @@ a {
     text-align: center;
 }
 
+.navi-parent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.navigation-list-wrap {
+    flex: none;
+    overflow: auto;
+    margin: auto 0;
+    padding-top: 10px;
+}
+
 .navigation-catchphrase {
     margin-top: 5px;
     color: red;
@@ -47,3 +61,5 @@ a {
 .navigation-guest {
     margin-top: 10px;
 }
+
+style = "border:none"

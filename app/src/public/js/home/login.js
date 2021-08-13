@@ -24,6 +24,7 @@ function login() {
     }).then((res) => res.json())
       .then((res) => {
           if(res.success) {
+              console.log(res);
               location.href = "/navigation";              
           } else {
               if(res.err) return alert(res.err);
