@@ -1,0 +1,66 @@
+@import url(style.css);
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #263343;
+    padding: 8px 12px;
+}
+.navbar a {
+    text-decoration: none;
+    color: white;
+}
+
+.navbar__sub {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    padding-left: 0;
+}
+
+.navbar__sub li {
+    padding: 8px 12px;
+}
+
+.navbar__sub li:hover {
+    background-color: #d49466;
+    border-radius: 4px;
+}
+
+.navbar__toggle {
+    display: none;
+    position: absolute;
+    right: 32px;
+    font-size: 24px;
+    /* color: #d49466; */
+}
+
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px 24px;
+    }
+ 
+    .navbar__sub {
+        /* display: none; */
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar__sub li {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* .navbar__toggle {
+        display: block;
+    } */
+/*
+    .navbar__sub.active {
+        display: flex;
+    } */
+} 

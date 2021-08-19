@@ -44,6 +44,21 @@ const output = {
         res.render("home/register");
     },
 
+    home: (req, res) => {
+        logger.info(`GET /home 304 "홈 화면으로 이동"`);
+        res.render("home/home");
+    },
+
+    board: (req, res) => {
+        logger.info(`GET /board 304 "게시판 화면으로 이동"`);
+        res.render("home/board");
+    },
+
+    listview: (req, res) => {
+        logger.info(`GET /listview 304 "게시판 조회 화면으로 이동"`);
+        res.render("home/listview");
+    },
+
     upload: (req, res) => {
         if(isAuthOwner(req, res)) {
             logger.info(`GET /upload 304 "글쓰기 화면으로 이동"`);
@@ -57,16 +72,14 @@ const output = {
     navigation: async (req, res) => {
         const hint = new Hint();
         const response = await hint.navigation();
-        const navi = JSON.stringify(response); 
 
         logger.info(`GET /navigation 304 "안내 화면으로 이동"`);
-        res.render("home/navigation");
+        res.render("home/navigation", {data : response});
     },
 
     symptom: async (req, res) => {
         const symptom = new Symptom();
         const response = await symptom.navigation();
-        const navi = JSON.stringify(response); 
 
         logger.info(`GET /symptom 304 "대표증상 화면으로 이동"`);
         res.render("home/symptom", {data:response});
@@ -93,8 +106,6 @@ const process = {
         const user = new User(req.body);        
         const response = await user.login();
         req.session.user = user;
-        console.log(req.session.user);
-        console.log(response);
         req.session.isLogined = true;
         const url = {
             method: "POST",
@@ -147,6 +158,16 @@ const process = {
 
         log(response, url);
         return res.status(url.status).json(response);        
+    },
+
+    symptom: async (req, res) => {
+        // req.body.id = req.session.user.body.id;
+        
+        symptom_code = req.body.key_code;
+        console.log(req.session);
+        console.log(symptom_code);
+
+        return res.status('201').json({success: true});     
     },
 }
 

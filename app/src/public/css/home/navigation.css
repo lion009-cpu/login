@@ -62,4 +62,6 @@ a {
     margin-top: 10px;
 }
 
-style = "border:none"
+style { 
+    border:none
+}

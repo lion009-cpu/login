@@ -12,7 +12,9 @@ const logger = require('./src/config/logger');
 const jsdom = require("jsdom");
 const JSDOM = jsdom.JSDOM;
 const category = "B01003";
+const symptom_code = "";
 global.category = category;
+global.symptom_code = symptom_code;
 
 const app = express();
 dotenv.config();
