@@ -12,9 +12,15 @@ a {
     text-decoration: none;
     color: inherit;
 }
-.board_wrap {
+/* .board_wrap {
     width: 1000px;
     margin: 30px auto;
+} */
+.board_wrap {
+    width : 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
 }
 .board_title {
     margin-bottom: 30px;
@@ -27,16 +33,18 @@ a {
     font-size: 1.4rem;
 }
 .btn_upload {
+    display: flex;
     margin-bottom: 30px;
     text-align: center;
+    align-items: center;
     font-size: 0;
+    justify-content: space-between;
 }
 .btn_upload a {
     display: inline-block;
     /* min-width: 80px; */
     width: 100%;
     padding: 10px;
-    margin-left: 10px;
     border: 1px solid #4CAF50;
     border-radius: 2px;
     font-size: 1.4rem;
