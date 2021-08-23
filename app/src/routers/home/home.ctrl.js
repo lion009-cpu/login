@@ -6,6 +6,21 @@ const Hint = require("../../models/Hint");
 const Symptom = require("../../models/Symptom");
 const Board = require('../../models/Board');
 const crypto = require('crypto');
+const main = {
+    question_id:"",
+    id: "",
+    creat_dt: "",
+    read_cnt: "",
+    reply_cnt: "",
+    title: "",
+    symp_code: "",
+    contents: "",
+    symp_com: "",
+};
+
+const temp = {
+    body: main,
+}
 
 async function loadNavi(req, res) {
     const hint = new Hint();
@@ -31,6 +46,7 @@ const output = {
     },
 
     login: async (req, res) => {
+        console.log(req.session);
         if(await isAuthOwner(req, res)) {
             await loadNavi(req, res);
         } else {
@@ -44,9 +60,21 @@ const output = {
         res.render("home/register");
     },
 
-    home: (req, res) => {
+    main: async (req, res) => {
+        console.log(symptom_code);
+        const board = new Board(symptom_code);        
+        const response = await board.search();
+
+        logger.info(`GET /main 304 "홈 화면으로 이동"`);
+        res.render("home/main", {data : response, symp_nm : symptom_nm});
+    },
+
+    home: async (req, res) => {
+        const board = new Board(symptom_code);        
+        const response = await board.search();
+
         logger.info(`GET /home 304 "홈 화면으로 이동"`);
-        res.render("home/home");
+        res.render("home/home", {data : response});
     },
 
     board: (req, res) => {
@@ -60,6 +88,8 @@ const output = {
     },
 
     upload: (req, res) => {
+        console.log(category);
+        console.log(symptom_code);
         if(isAuthOwner(req, res)) {
             logger.info(`GET /upload 304 "글쓰기 화면으로 이동"`);
             res.render("home/upload");
@@ -84,14 +114,20 @@ const output = {
         logger.info(`GET /symptom 304 "대표증상 화면으로 이동"`);
         res.render("home/symptom", {data:response});
     },
+
+    readboard: async (req, res) => {
+
+        logger.info(`GET /readboard 304 "게시글 읽기 화면으로 이동"`);
+        console.log(temp.body);
+        res.render("home/readboard", {data:temp.body});
+    },
 }
 
 const process = {
 
     hello: async (req, res) => {
 
-        logger.info(`POST / 304 "홈 화면으로 이동"`);        
-        console.log(req.body);        
+        logger.info(`POST / 304 "홈 화면으로 이동"`);       
         res.render("home/index");
     },
 
@@ -144,10 +180,14 @@ const process = {
     },
 
     upload: async (req, res) => {  
-        req.body.direction = category;
+        req.body.direction = category;//참여형태
         req.body.id = req.session.user.body.id;
-        
+        req.body.symp_code = symptom_code;
+
+        console.log(req.body);
+        console.log(symptom_nm);
         const board = new Board(req.body);
+        
         const response = await board.upload();
 
         const url = {
@@ -164,9 +204,17 @@ const process = {
         // req.body.id = req.session.user.body.id;
         
         symptom_code = req.body.key_code;
-        console.log(req.session);
-        console.log(symptom_code);
+        symptom_nm = req.body.key_nm;
+        return res.status('201').json({success: true});     
+    },
 
+    readboard: async (req, res) => {
+        
+        return res.status('201').json({success: true});     
+    },
+
+    main: async (req, res) => {
+        temp.body = req.body;        
         return res.status('201').json({success: true});     
     },
 }

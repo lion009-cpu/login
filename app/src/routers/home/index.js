@@ -15,6 +15,8 @@ router.get('/upload', ctrl.output.upload);
 router.get('/home', ctrl.output.home);
 router.get('/board', ctrl.output.board);
 router.get('/listview', ctrl.output.listview);
+router.get('/main', ctrl.output.main);
+router.get('/readboard', ctrl.output.readboard);
 
 router.post('/hello', ctrl.process.hello);
 router.post('/login', ctrl.process.login);
@@ -22,6 +24,8 @@ router.post('/register', ctrl.process.register);
 router.post('/navigation', ctrl.process.navigation);
 router.post('/upload', ctrl.process.upload);
 router.post('/symptom', ctrl.process.symptom);
+router.post('/main', ctrl.process.main);
+router.post('/readboard', ctrl.process.readboard);
 
 
 module.exports = router;

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home/home.css">
+    <script src="https://kit.fontawesome.com/487301cf1d.js" crossorigin="anonymous"></script>
+    <script src="/js/home/main.js" defer></script>
+    <title>홈</title>
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="navbar__sub">
+            <li><a href="/login">홈</a></li>
+            <li><a href="/upload"><i class="fas fa-user-friends"></i>동병인</a></li>
+            <li><a href="/register">내프로필</a></li>
+            <li><a href="/navigation">알림</a></li>
+            <li><a href="/symptom">메뉴</a></li>
+        </ul>
+        <a href="#" class="navbar__toggle">
+            <i class="fas fa-bars"></i>
+        </a>
+    </nav>
+    <div class="board_wrap">
+        <div class="btn_upload">
+            <a href="/upload" class="on">증상올리기</a>
+        </div>
+        <div class="board_view">
+            <% for(var i=0; i<data.length; i++){ %>
+                <div class="info">
+                    <dl>
+                        <dt>번호</dt>
+                        <dd><%=data[i].question_id%></dd>
+                    </dl>
+                    <dl>
+                        <dt>글쓴이</dt>
+                        <dd><%=data[i].id%></dd>
+                    </dl><dl>
+                        <dt>작성일</dt>
+                        <dd><%=data[i].creat_dt%></dd>
+                    </dl><dl>
+                        <dt>조회</dt>
+                        <dd><%=data[i].read_cnt%></dd>
+                    </dl>
+                    </dl><dl>
+                        <dt>추천</dt>
+                        <dd><%=data[i].reply_cnt%></dd>
+                    </dl>
+                    </dl><dl>
+                        <dt>증상</dt>
+                        <dd><%=symp_nm%></dd>
+                    </dl>
+                </div>
+                <div class="stat">
+                    <a href="#" class="on" onclick=
+                           "popupread('<%=data[i].question_id%>', '<%=data[i].id%>', '<%=data[i].creat_dt%>', '<%=data[i].read_cnt%>', '<%=data[i].reply_cnt%>', '<%=data[i].title%>', '<%=data[i].contents%>', '<%=symp_nm%>');">
+                        <%=data[i].title%>
+                    </a>
+                </div>
+                <div class="cont">
+                    <a href="#" class="on" onclick=
+                           "popupread('<%=data[i].question_id%>', '<%=data[i].id%>', '<%=data[i].creat_dt%>', '<%=data[i].read_cnt%>', '<%=data[i].reply_cnt%>', '<%=data[i].title%>', '<%=data[i].contents%>', '<%=symp_nm%>');">
+                        <%=data[i].contents%>
+                    </a>
+                </div>
+                <div class="btn_wrap">
+                    <a href="#" class="on">
+                        좋아요 <i class="far fa-thumbs-up"></i>
+                    </a>
+                    <a href="#" class="on">
+                        댓글달기 <i class="far fa-comment-dots"></i>
+                    </a>
+                </div>
+            <% } %>
+        </div>
+        <!-- <div class="btn_wrap">
+            <a href="#" class="on">
+                좋아요 <i class="far fa-thumbs-up"></i>
+            </a>
+            <a href="#" class="on">
+                댓글달기 <i class="far fa-comment-dots"></i>
+            </a>
+        </div> -->
+    </div>
+</body>
+</html>

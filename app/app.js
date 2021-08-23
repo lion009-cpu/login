@@ -13,8 +13,10 @@ const jsdom = require("jsdom");
 const JSDOM = jsdom.JSDOM;
 const category = "B01003";
 const symptom_code = "";
+const symptom_nm = "";
 global.category = category;
 global.symptom_code = symptom_code;
+global.symptom_nm = symptom_nm;
 
 const app = express();
 dotenv.config();

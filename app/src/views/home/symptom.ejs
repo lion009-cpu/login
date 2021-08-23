@@ -12,7 +12,7 @@
     <form class="upload-form">
         <div class="symptom-wrap">        
             <% for(var i=0; i<data.length; i++){ %> 
-                <input type="checkbox" name="checkAuth" value="<%= data[i].code_id %>"/>
+                <input type="checkbox" name="checkAuth" value="<%= data[i].code_id %>" id="<%= data[i].code_nm %>"/>
                 <strong><%= data[i].code_nm %></strong><br><br>
             <% } %>     
             <p id="button" onclick="search_board('<%=data%>');">관심증상 글보기</p>       

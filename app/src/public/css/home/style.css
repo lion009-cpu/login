@@ -14,7 +14,7 @@ a {
 }
 .board_wrap {
     width: 1000px;
-    margin: 100px auto;
+    margin: 30px auto;
 }
 .board_title {
     margin-bottom: 30px;
@@ -26,26 +26,51 @@ a {
     margin-top: 5px;
     font-size: 1.4rem;
 }
+.btn_upload {
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 0;
+}
+.btn_upload a {
+    display: inline-block;
+    /* min-width: 80px; */
+    width: 100%;
+    padding: 10px;
+    margin-left: 10px;
+    border: 1px solid #4CAF50;
+    border-radius: 2px;
+    font-size: 1.4rem;
+}
+.btn_upload a:first-child {
+    margin-left: 0;
+}
+.btn_upload a.on {
+    background-color: #4CAF50;
+    color: #fff;
+ }
+ 
 .btn_wrap {
     margin-top: 30px;
     text-align: center;
+    align-items: center;    
     font-size: 0;
+    border-bottom: 2px solid #000;
 }
 .btn_wrap a {
     display: inline-block;
     min-width: 80px;
     padding: 10px;
     margin-left: 10px;
-    border: 1px solid #000;
-    border-radius: 2px;
+    /* border: 1px solid #4CAF50; */
+    /* border-radius: 2px; */
     font-size: 1.4rem;
 }
 .btn_wrap a:first-child {
     margin-left: 0;
 }
 .btn_wrap a.on {
-    background-color: #000;
-    color: #fff;
+    /* background-color: #4CAF50; */
+    /* color: #fff; */
 }
 .board_list {
     width: 100%;
@@ -132,7 +157,7 @@ a {
 }
 .board_view .info {
     padding: 15px;
-    border-bottom: 1px solid #999;
+    /* border-bottom: 1px solid #999; */
     font-size: 0;
 }
 .board_view .info dl {
@@ -161,11 +186,16 @@ a {
     display: inline-block;
     font-size: 1.4rem;
 }
-.board_view .info dl dt {
-}
 .board_view .info dl dd {
     margin-left: 10px;
     color: #777;
+}
+.board_view .info dl:first-child {
+    padding-left: 0;   
+}
+.board_view .stat {
+    padding: 15px;
+    font-size: 1.4rem;
 }
 .board_view .cont {
     padding: 15px;

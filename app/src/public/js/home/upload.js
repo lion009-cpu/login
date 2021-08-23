@@ -24,7 +24,7 @@ function upload() {
     }).then((res) => res.json())
       .then((res) => {
           if(res.success) {
-              location.href = "/upload";              
+              location.href = "/main";              
           } else {
               if(res.err) return alert(res.err);
               alert(res.msg);

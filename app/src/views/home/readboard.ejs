@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home/home.css">
+    <script src="/js/home/readboard.js" defer></script>
+    <title>Document</title>
+</head>
+<body>
+  <div class="board_wrap">
+    <div class="board_view">
+            <div class="info">
+                <dl>
+                    <dt>번호</dt>
+                    <dd><%=data.question_id%></dd>
+                </dl>
+                <dl>
+                    <dt>글쓴이</dt>
+                    <dd><%=data.id%></dd>
+                </dl><dl>
+                    <dt>작성일</dt>
+                    <dd><%=data.creat_dt%></dd>
+                </dl><dl>
+                    <dt>조회</dt>
+                    <dd><%=data.read_cnt%></dd>
+                </dl>
+                </dl><dl>
+                    <dt>추천</dt>
+                    <dd><%=data.reply_cnt%></dd>
+                </dl>
+                </dl><dl>
+                    <dt>증상</dt>
+                    <dd><%=data.symp_com%></dd>
+                </dl>
+            </div>
+            <div class="stat">
+                    <%=data.title%>
+            </div>
+            <div class="cont">
+                    <%=data.contents%>
+            </div>
+    </div>
+    <div class="btn_wrap">
+        <a href="#" class="on">
+            좋아요 <i class="far fa-thumbs-up"></i>
+        </a>
+        <a href="#" class="on">
+            댓글달기 <i class="far fa-comment-dots"></i>
+        </a>
+    </div>
+  </div>
+</body>
+</html>
+
+<!-- Copyright (c) 2021 by Aigars Silkalns (https://codepen.io/colorlib/pen/rxddKy) -->

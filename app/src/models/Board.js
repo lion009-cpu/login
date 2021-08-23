@@ -15,6 +15,15 @@ class Board {
             return {success : false, err};
         }
     }
+
+    async search() {
+        try {            
+            const response = await BoardPrc.search(this.body);
+            return response;
+        } catch(err) {
+            return {success : false, err};
+        }
+    }
 }
 
 module.exports = Board;

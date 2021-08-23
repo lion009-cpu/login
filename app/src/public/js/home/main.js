@@ -1,11 +1,19 @@
 "use strict";
 
-function navigation(navi_id) {
+function popupread(q_id, nick, dt, r_cnt, s_cnt, stat, cont, symp) {
+    
     const req = {
-        direction: navi_id,
+        question_id: q_id,
+        id: nick,
+        creat_dt: dt,
+        read_cnt: r_cnt,
+        reply_cnt: s_cnt,
+        title: stat,
+        contents: cont,
+        symp_com: symp,
     };
 
-    fetch("/navigation", {
+    fetch("/main", {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
@@ -14,7 +22,7 @@ function navigation(navi_id) {
     }).then((res) => res.json())
       .then((res) => {
           if(res.success) {
-              location.href = "/symptom";              
+              location.href = "/readboard";              
           } else {
               if(res.err) return alert(res.err);
               alert(res.msg);
