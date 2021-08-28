@@ -6,7 +6,8 @@ const Hint = require("../../models/Hint");
 const Symptom = require("../../models/Symptom");
 const Board = require('../../models/Board');
 const crypto = require('crypto');
-const main = {
+const { data } = require("../../config/logger");
+let main = {
     question_id:"",
     id: "",
     creat_dt: "",
@@ -17,10 +18,15 @@ const main = {
     contents: "",
     symp_com: "",
 };
-
-const temp = {
+let temp = {
     body: main,
-}
+};
+let like_stat = {
+    data : [],
+    date : "",
+    none_like : "far fa-thumbs-up",
+    like : "fas fa-thumbs-up",
+};
 
 async function loadNavi(req, res) {
     const hint = new Hint();
@@ -61,9 +67,13 @@ const output = {
     },
 
     main: async (req, res) => {
-        console.log(symptom_code);
-        const board = new Board(symptom_code);        
+        if(await isAuthOwner(req, res)) {
+            req.body.id = req.session.user.body.id;
+        } 
+        req.body.symptom_id = symptom_code;
+        const board = new Board(req.body);        
         const response = await board.search();
+        // const result = await board.likers();
 
         logger.info(`GET /main 304 "홈 화면으로 이동"`);
         res.render("home/main", {data : response, symp_nm : symptom_nm});
@@ -118,8 +128,13 @@ const output = {
     readboard: async (req, res) => {
 
         logger.info(`GET /readboard 304 "게시글 읽기 화면으로 이동"`);
-        console.log(temp.body);
         res.render("home/readboard", {data:temp.body});
+    },
+
+    likers: async (req, res) => {
+
+        logger.info(`GET /likers 304 "좋아요 목록 화면으로 이동"`);
+        res.render("home/likers");
     },
 }
 
@@ -201,8 +216,6 @@ const process = {
     },
 
     symptom: async (req, res) => {
-        // req.body.id = req.session.user.body.id;
-        
         symptom_code = req.body.key_code;
         symptom_nm = req.body.key_nm;
         return res.status('201').json({success: true});     
@@ -214,8 +227,68 @@ const process = {
     },
 
     main: async (req, res) => {
-        temp.body = req.body;        
+        temp.body = req.body;                
         return res.status('201').json({success: true});     
+    },
+
+    like: async (req, res) => {
+        if(await isAuthOwner(req, res)) {
+            req.body.id=req.session.user.body.id;
+            const board = new Board(req.body);
+            console.log(req.body);
+            let response="";
+            if(req.body.liked === "0") {
+                response = await board.like(); 
+            } else {
+                response = await board.cancle();
+            }
+            
+            const url = {
+                method: "POST",
+                path: "/upload",
+                status: response.err ? 400 : 201,
+            };
+    
+            // log(response, url);
+            // return res.status(url.status).json(response); 
+            
+            console.log(response);
+
+            if(response.success) { 
+                if(req.body.liked === "0") {
+                    return res.status('201').json({success:true, liked:'1', lik_cd:'fas fa-thumbs-up'});
+                } else {
+                    return res.status('201').json({success:true, liked:'0', lik_cd:'far fa-thumbs-up'});
+                }
+            } else {
+                return res.status('201').json({success: false, err});
+            }
+        } else {
+            return res.status('201').json({success: false, msg:"로그인이 필요합니다."});
+        }
+    },
+
+    unlike: async (req, res) => {
+        
+        if(await isAuthOwner(req, res)) {
+            req.body.id=req.session.user.body.id;
+            const board = new Board(req.body);        
+            const response = await board.like(); 
+
+            if(response.success) { 
+                if(req.body.liked === "0") {
+                    return res.status('201').json({success:true, like_cnt:response.data[0].like_cnt, liked:'1', lik_cd:'fas fa-thumbs-up'});
+                } else {
+                    console.log(response.data[0].like_cnt);
+                    return res.status('201').json({success:true, like_cnt:response.data[0].like_cnt, liked:'0', lik_cd:'far fa-thumbs-up'});
+                }
+            } else {
+                return res.status('201').json({success: false});
+            }
+        } else {
+            logger.info(`GET /login 304 "로그인 화면으로 이동"`);
+            res.render("home/login");
+        }
     },
 }
 

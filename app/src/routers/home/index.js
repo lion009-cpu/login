@@ -26,6 +26,8 @@ router.post('/upload', ctrl.process.upload);
 router.post('/symptom', ctrl.process.symptom);
 router.post('/main', ctrl.process.main);
 router.post('/readboard', ctrl.process.readboard);
+router.post('/like', ctrl.process.like);
+router.post('/unlike', ctrl.process.unlike);
 
 
 module.exports = router;

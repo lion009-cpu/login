@@ -27,61 +27,83 @@
             <a href="/upload" class="on">증상올리기</a>
         </div>
         <div class="board_view">
-            <% for(var i=0; i<data.length; i++){ %>
-                <div class="info">
+            <% if (data.length == 0) {%>
+              <div class="info">
+                <dl>
+                    <dt>번호</dt>
+                    <dd></dd>
+                </dl>
+                <dl>
+                    <dt>글쓴이</dt>
+                    <dd></dd>
+                </dl>
+                <dl>
+                    <dt>작성일</dt>
+                    <dd></dd>
+                </dl>
+                <dl>
+                    <dt>증상</dt>
+                    <dd><%=symp_nm%></dd>
+                </dl>
+              </div>
+            <%} else {%>
+              <% for(var i=0; i<data.length; i++){ %>
+                <% if (data[i].rk === 1) {%>
+                  <div class="info">
                     <dl>
                         <dt>번호</dt>
-                        <dd><%=data[i].question_id%></dd>
+                        <dd><%=data[i].board_key_id%></dd>
                     </dl>
                     <dl>
                         <dt>글쓴이</dt>
-                        <dd><%=data[i].id%></dd>
+                        <dd><%=data[i].board_user_id%></dd>
                     </dl><dl>
                         <dt>작성일</dt>
                         <dd><%=data[i].creat_dt%></dd>
-                    </dl><dl>
-                        <dt>조회</dt>
-                        <dd><%=data[i].read_cnt%></dd>
                     </dl>
-                    </dl><dl>
-                        <dt>추천</dt>
-                        <dd><%=data[i].reply_cnt%></dd>
-                    </dl>
-                    </dl><dl>
+                    <dl>
                         <dt>증상</dt>
                         <dd><%=symp_nm%></dd>
                     </dl>
-                </div>
-                <div class="stat">
+                  </div>
+                  <div class="stat">
                     <a href="#" class="on" onclick=
-                           "popupread('<%=data[i].question_id%>', '<%=data[i].id%>', '<%=data[i].creat_dt%>', '<%=data[i].read_cnt%>', '<%=data[i].reply_cnt%>', '<%=data[i].title%>', '<%=data[i].contents%>', '<%=symp_nm%>');">
+                           "popupread('<%=data[i].board_key_id%>', '<%=data[i].board_user_id%>', '<%=data[i].creat_dt%>', '<%=data[i].read_cnt%>', '<%=data[i].reply_cnt%>', '<%=data[i].title%>', '<%=data[i].contents%>', '<%=symp_nm%>');">
                         <%=data[i].title%>
                     </a>
-                </div>
-                <div class="cont">
+                  </div>
+                  <div class="cont">
                     <a href="#" class="on" onclick=
-                           "popupread('<%=data[i].question_id%>', '<%=data[i].id%>', '<%=data[i].creat_dt%>', '<%=data[i].read_cnt%>', '<%=data[i].reply_cnt%>', '<%=data[i].title%>', '<%=data[i].contents%>', '<%=symp_nm%>');">
+                           "popupread('<%=data[i].board_key_id%>', '<%=data[i].board_user_id%>', '<%=data[i].creat_dt%>', '<%=data[i].read_cnt%>', '<%=data[i].reply_cnt%>', '<%=data[i].title%>', '<%=data[i].contents%>', '<%=symp_nm%>');">
                         <%=data[i].contents%>
                     </a>
-                </div>
-                <div class="btn_wrap">
-                    <a href="#" class="on">
-                        좋아요 <i class="far fa-thumbs-up"></i>
-                    </a>
-                    <a href="#" class="on">
-                        댓글달기 <i class="far fa-comment-dots"></i>
-                    </a>
-                </div>
-            <% } %>
+                  </div>
+                  <div class="show_cnt">
+                    <div class="prefer">
+                      <p id="button1" class="on" onclick="likers('<%=data[i].question_id%>');">
+                      <i class="<%=data[i].lik%>"></i>      <%=data[i].like_cnt%>개</p>
+                    </div>
+                    <div class="read_cnt">
+                      <p id="button2" class="on" onclick="like('<%=data[i].question_id%>');">
+                        조회      <%=data[i].read_cnt%>개</p>
+                    </div>
+                    <div class="reply_cnt">
+                      <p id="button3" class="on" onclick="like('<%=data[i].question_id%>');">
+                        댓글      <%=data[i].reply_cnt%>개</p>
+                    </div>
+                  </div>
+                  <form class="btn_increse">
+                    <div class="btn_wrap">
+                        <p id="button" class="on" onclick="like('<%=data[i].board_key_id%>', '<%=data[i].board_user_id%>','<%=data[i].liked%>', '<%=data[i].like_id%>', '<%=data[i].lik%>');">
+                            좋아요 <i class="<%=data[i].lik%>"></i></p>
+                        <p id="button" class="on" onclick="reply('<%=data[i].question_id%>');">
+                            댓글달기 <i class="far fa-comment-dots"></i></p>
+                    </div>
+                  </form>
+                <% } %>
+              <% } %>
+            <%} %>
         </div>
-        <!-- <div class="btn_wrap">
-            <a href="#" class="on">
-                좋아요 <i class="far fa-thumbs-up"></i>
-            </a>
-            <a href="#" class="on">
-                댓글달기 <i class="far fa-comment-dots"></i>
-            </a>
-        </div> -->
     </div>
 </body>
 </html>

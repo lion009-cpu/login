@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const MySQLStore = require('express-mysql-session')(session);
 const logger = require('./src/config/logger');
 const jsdom = require("jsdom");
+const flash = require('flash');
 const JSDOM = jsdom.JSDOM;
 const category = "B01003";
 const symptom_code = "";
@@ -24,13 +25,15 @@ dotenv.config();
 const accessLogStream = require("./src/config/log");
 
 const home = require("./src/routers/home");
+const db = require("./src/config/db");
+const { seq } = require("async");
 
 const IN_PROD = process.env.NODE_ENV === 'production'
 
 app.set("views", "./src/views");
 app.set("view engine", "ejs");
 app.use(express.static(`${__dirname}/src/public`));
-app.use(cookieParser());
+app.use(cookieParser(process.env.SESS_SECRET));
 app.use(session({
     name: process.env.SESS_NAME,
     resave: false,
@@ -53,6 +56,7 @@ app.use(express.urlencoded({ extended : true }));
 app.use(express.json());
 app.use(morgan('tiny', { stream: logger.stream }));
 // app.use(morgan('common', { stream: accessLogStream }));
+app.use(flash());
 
 app.use("/", home);
 
