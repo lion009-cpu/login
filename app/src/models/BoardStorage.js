@@ -42,8 +42,9 @@ class BoardStorage {
     }
 
     static async likers(body) {
+        
         return new Promise((resolve, reject) => {
-            const query = "id FROM like_board WHERE question_id = ?;";
+            const query = "SELECT id FROM like_board WHERE question_id = ?;";
                 db.query(query, [body.question_id], (err, data) => {
                     if(err) reject(`${err}`);
                     resolve(data);

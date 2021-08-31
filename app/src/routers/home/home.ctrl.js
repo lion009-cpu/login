@@ -50,7 +50,7 @@ const output = {
         logger.info(`GET / 304 "홈 화면으로 이동"`);
         res.render("home/index");
     },
-
+    
     login: async (req, res) => {
         console.log(req.session);
         if(await isAuthOwner(req, res)) {
@@ -70,10 +70,12 @@ const output = {
         if(await isAuthOwner(req, res)) {
             req.body.id = req.session.user.body.id;
         } 
+        
         req.body.symptom_id = symptom_code;
         const board = new Board(req.body);        
         const response = await board.search();
         // const result = await board.likers();
+        // console.log(response);
 
         logger.info(`GET /main 304 "홈 화면으로 이동"`);
         res.render("home/main", {data : response, symp_nm : symptom_nm});
@@ -211,7 +213,6 @@ const process = {
             status: response.err ? 400 : 201,
         };
 
-        log(response, url);
         return res.status(url.status).json(response);        
     },
 
@@ -289,6 +290,29 @@ const process = {
             logger.info(`GET /login 304 "로그인 화면으로 이동"`);
             res.render("home/login");
         }
+    },
+
+    likers: async (req, res) => {
+        
+        if(await isAuthOwner(req, res)) {
+            req.body.id=req.session.user.body.id;            
+        }
+        console.log(req.body);
+        const board = new Board(req.body);        
+        const response = await board.likers(); 
+
+        console.log(response);
+
+        // if(response.success) { 
+        //     if(req.body.liked === "0") {
+        //         return res.status('201').json({success:true, like_cnt:response.data[0].like_cnt, liked:'1', lik_cd:'fas fa-thumbs-up'});
+        //     } else {
+        //         console.log(response.data[0].like_cnt);
+        //         return res.status('201').json({success:true, like_cnt:response.data[0].like_cnt, liked:'0', lik_cd:'far fa-thumbs-up'});
+        //     }
+        // } else {
+        //     return res.status('201').json({success: false});
+        // } 
     },
 }
 

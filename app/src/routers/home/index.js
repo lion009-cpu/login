@@ -28,6 +28,6 @@ router.post('/main', ctrl.process.main);
 router.post('/readboard', ctrl.process.readboard);
 router.post('/like', ctrl.process.like);
 router.post('/unlike', ctrl.process.unlike);
-
+router.post('/likers', ctrl.process.likers);
 
 module.exports = router;
