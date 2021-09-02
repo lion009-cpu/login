@@ -69,7 +69,9 @@ const output = {
     main: async (req, res) => {
         if(await isAuthOwner(req, res)) {
             req.body.id = req.session.user.body.id;
-        } 
+        } else {
+            req.session.isLogined = false;
+        }
         
         req.body.symptom_id = symptom_code;
         const board = new Board(req.body);        
@@ -78,7 +80,7 @@ const output = {
         // console.log(response);
 
         logger.info(`GET /main 304 "홈 화면으로 이동"`);
-        res.render("home/main", {data : response, symp_nm : symptom_nm});
+        res.render("home/main", {data : response, symp_nm : symptom_nm, howami: req.session.isLogined});
     },
 
     home: async (req, res) => {
@@ -115,16 +117,26 @@ const output = {
         const hint = new Hint();
         const response = await hint.navigation();
 
+        if(await isAuthOwner(req, res)) {
+        } else {
+            req.session.isLogined = false;
+        }
+
         logger.info(`GET /navigation 304 "안내 화면으로 이동"`);
-        res.render("home/navigation", {data : response});
+        res.render("home/navigation", {data : response, howami: req.session.isLogined});
     },
 
     symptom: async (req, res) => {
         const symptom = new Symptom();
         const response = await symptom.navigation();
 
+        if(await isAuthOwner(req, res)) {
+        } else {
+            req.session.isLogined = false;
+        }
+
         logger.info(`GET /symptom 304 "대표증상 화면으로 이동"`);
-        res.render("home/symptom", {data:response});
+        res.render("home/symptom", {data:response, howami: req.session.isLogined});
     },
 
     readboard: async (req, res) => {
@@ -303,16 +315,8 @@ const process = {
 
         console.log(response);
 
-        // if(response.success) { 
-        //     if(req.body.liked === "0") {
-        //         return res.status('201').json({success:true, like_cnt:response.data[0].like_cnt, liked:'1', lik_cd:'fas fa-thumbs-up'});
-        //     } else {
-        //         console.log(response.data[0].like_cnt);
-        //         return res.status('201').json({success:true, like_cnt:response.data[0].like_cnt, liked:'0', lik_cd:'far fa-thumbs-up'});
-        //     }
-        // } else {
-        //     return res.status('201').json({success: false});
-        // } 
+        return res.status('201').json({success:true, likers:response});
+
     },
 }
 

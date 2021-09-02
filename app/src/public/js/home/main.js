@@ -1,21 +1,88 @@
 "use strict";
 
+const title = document.querySelector("#recipient-name"),
+      content= document.querySelector("#message-text"),
+      uploadBtn= document.querySelector("#upload");
+
 var exampleModal = document.getElementById('exampleModal')
+exampleModal.addEventListener('hidden.bs.modal', function (event) {
+
+});
+
+function eraseText() {
+  document.getElementById("message-text").value = "";
+}
+
+function upload() {
+  if(!title.value) return alert("간략증상을 입력해 주십시요.");
+  if(!content.value) return alert("상세증상을 입력해 주십시요.");
+
+  const req = {
+      title: title.value,
+      content: content.value,
+  };
+
+  fetch("/upload", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+  }).then((res) => res.json())
+    .then((res) => {
+        if(res.success) {
+            location.href = "/main";              
+        } else {
+            if(res.err) return alert(res.err);
+            alert(res.msg);
+        }
+    }).catch((err) => {
+    });
+}
+
 exampleModal.addEventListener('show.bs.modal', function (event) {
-  alert('hi');
   // Button that triggered the modal
-  var button = event.relatedTarget
+  var button = event.relatedTarget;
   // Extract info from data-bs-* attributes
-  var recipient = button.getAttribute('data-bs-id')
+  var question_id = button.getAttribute('data-bs-id');
+  var likersCnt = button.getAttribute('data-bs-cnt');
   // If necessary, you could initiate an AJAX request here
   // and then do the updating in a callback.
   //
   // Update the modal's content.
-  var modalTitle = exampleModal.querySelector('.modal-title')
-  var modalBodyInput = exampleModal.querySelector('.modal-body input')
+  var modalTitle = exampleModal.querySelector('.modal-title');
+  var likersList = exampleModal.querySelector('#likers-list');
 
-  modalTitle.textContent = 'New message to ' + recipient
-  modalBodyInput.value = recipient
+  modalTitle.textContent = '모두 ' + likersCnt;
+  const req = {
+    question_id: question_id,
+  }
+
+  fetch("/likers", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(req),
+  }).then((res) => res.json())
+    .then((res) => {
+        if(res.success) {
+            // location.href = "/readboard"; 
+            var text = "";
+            for(var i=0; i<res.likers.length; i++) {
+              // likersList.textContent = res.likers[i].id+'가 좋아해요';
+              text += "<ul>\n"
+              text += "<li><h5>" + res.likers[i].id + "</h5></li>\n"
+              text += "</ul>\n"
+            }
+            console.log(text);
+            likersList.innerHTML = text;
+        } else {
+            if(res.err) return alert(res.err);
+            alert(res.msg);
+        }
+    }).catch((err) => {
+  });
 })
 
 function popupread(q_id, nick, dt, r_cnt, s_cnt, stat, cont, symp) {

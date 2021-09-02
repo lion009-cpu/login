@@ -9,20 +9,22 @@
     <title>환영</title>
 </head>
 <body>
-    <div class="navigation-wrap">
-        <div class="navigation-catchphrase">
-            <strong>아픔을 함께하면 반이 됩니다.</strong><br><br>
-        </div>
-        <div class="navigation-welcome">
-            <strong>치유에 참여하심을 축하드립니다.</strong><br><br>
-        </div>
-        <div class="navigation-subtitle">
-            <strong>누구로 참여하고 싶으신가요?</strong><br><br>            
-        </div>
-        <div class="navigation-list-wrap">
-            <% for(var i=0; i<data.length; i++){ %> 
-                <a href="#" id="navigation" onclick="navigation('<%=data[i].code_id%>');"><p><%= data[i].code_nm %></p><br></a>
-            <% } %>                    
+    <div class="container">
+        <div class="navigation-wrap">
+            <div class="navigation-catchphrase">
+                <strong>아픔을 함께하면 반이 됩니다.</strong><br><br>
+            </div>
+            <div class="navigation-welcome">
+                <strong>치유에 참여하심을 축하드립니다.</strong><br><br>
+            </div>
+            <div class="navigation-subtitle">
+                <strong>누구로 참여하고 싶으신가요?</strong><br><br>            
+            </div>
+            <div class="navigation-list-wrap">
+                <% for(var i=0; i<data.length; i++){ %> 
+                    <a href="#" id="navigation" onclick="navigation('<%=data[i].code_id%>');"><p><%= data[i].code_nm %></p><br></a>
+                <% } %>                    
+            </div>
         </div>
     </div>
 </body>
