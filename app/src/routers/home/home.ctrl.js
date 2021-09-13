@@ -106,7 +106,7 @@ const output = {
         // console.log(response);
 
         logger.info(`GET /main 304 "홈 화면으로 이동"`);
-        res.render("home/main", {data : response, symp_nm : symptom_nm, howami: isLogined, id: req.session.user.body.id});
+        res.render("home/main", {data : response, symp_nm : symptom_nm, howami: isLogined});
     },
 
     home: async (req, res) => {
