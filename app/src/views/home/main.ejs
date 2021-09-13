@@ -9,10 +9,11 @@
     <link rel="stylesheet" href="/css/home/home.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/487301cf1d.js" crossorigin="anonymous"></script>
-    <script src="/js/home/main.js" defer></script>
+    <!-- <script src="/js/home/main.js" defer></script> -->
     <title>홈</title>
 </head>
 <body>      
+  <!-- navigation -->
   <nav class="navbar navbar-expand-sm navbar-dark bg-primary fixed-top">
     <div class="container-fluid">
       <a class="navbar-brand" ><span class="mb-0 h1">치유</span></a>
@@ -40,6 +41,21 @@
             <a class="nav-link" href="/symptom">메뉴</a>
           </li>
         </ul>
+        <ul class="navbar-nav navbar-right">        
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" 
+               aria-expanded="false">접속하기</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <% if (howami) {%>
+                <li><a class="dropdown-item static-item" href="/login">로그인</a></li>
+                <li><a class="dropdown-item active_item" href="#">로그아웃</a></li>
+              <% } else { %>
+                <li><a class="dropdown-item active-item" href="/login">로그인</a></li>
+                <li><a class="dropdown-item static-item" href="#">로그아웃</a></li>
+              <% } %>              
+            </ul>
+          </li>
+        </ul>
       </div>
     </div>
   </nav> 
@@ -57,72 +73,14 @@
       </div>
     </div>
   </div> 
-  <!-- 게시글 모달  -->
-  <% if (howami) {%>
-    <div class="modal fade" id="upLoadModal" tabindex="-1" aria-labelledby="upLoadModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="upLoadModalLabel">글 올리기</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <label for="recipient-name" class="col-form-label">간략내용:</label>
-                <input type="search" class="form-control" id="recipient-name" >
-              </div>
-              <div class="mb-3">
-                <label for="message-text" class="col-form-label">상세내용:</label>
-                <textarea type= "search" class="form-control" id="message-text"></textarea>
-                <input id="clear" type="button" value="Clear" onclick="javascript:eraseText();">
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="upload" onclick="upload('<%=data%>');">글 올리기</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  <% } else {%>
-    <!-- 로그인모달 -->
-    <div class="modal fade" id="upLoadModal" tabindex="-1" aria-labelledby="upLoadModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="upLoadModalLabel">로그인</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">닉네임</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="닉네임">
-                <div id="emailHelp" class="form-text"></div>
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">비밀번호</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="비밀번호">
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="upload" onclick="upload('<%=data%>');">로그인</button><br>
-            <p class="message">비밀번호가 기억안나요<a href="/register">비밀번호변경</a></p><br>
-            <p class="message">회원이 아니시라면? <a href="/register">가입하기</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  <% } %>
-  <div class="container">  
+  <div class="container main-container">  
     <div class="d-grid gap-2">
-      <button class="btn btn-success" type="button" a href='#upLoadModal' 
+      <!-- ==============게시글 쓰기 버튼================== -->
+      <!-- <button class="btn btn-success" type="button" a href='#upLoadModal' 
               role="button" class="open-modal" data-bs-toggle="modal">        
-        <a href="#" class="on"><span class="mb-0 h3">증상올리기</span></a></button>
+        <a href="#" class="on"><span class="mb-0 h3">증상올리기</span></a></button> -->
+        <button class="btn btn-success" type="button" >        
+        <a href="/upload" class="on"><span class="mb-0 h3">증상올리기</span></a></button>
     </div>   
     <div class="board_wrap">
         <div class="board_view">
@@ -146,8 +104,7 @@
                 </dl>
               </div>
             <%} else {%>
-              <% for(var i=0; i<data.length; i++){ %>
-                <% if (data[i].rk === 1) {%>                  
+              <% for(var i=0; i<data.length; i++){ %>   
                   <div class="info">
                     <dl>
                         <dt>번호</dt>
@@ -179,36 +136,69 @@
                   </div>
                   <div class="show_cnt">
                     <div class="prefer">
-                      <!-- <p id="button1" class="on" onclick="likers('<%=data[i].board_key_id%>');"> -->
+                      <!-- ================좋아요 목록 모달 popup 버튼======================== -->
                       <!-- <p id="button1" class="on" onclick="likers('<%=data[i].board_key_id%>');">
                       <p><i class="<%=data[i].lik%>"></i>      <%=data[i].like_cnt%>개</p> -->
-                      <a href='#exampleModal' role="button" class="open-modal" 
-                           data-bs-toggle="modal" data-bs-id="<%=data[i].board_key_id%>" 
-                           data-bs-cnt="<%=data[i].like_cnt%>">
-                           <i class="<%=data[i].lik%>"></i>    <%=data[i].like_cnt%>개</a>       
+                      <a href='#exampleModal' role="button" class="open-modal" id="open-modal<%=i%>"
+                           data-bs-toggle="modal" data-bs-id="<%=data[i].board_key_id%>">
+                           <i class="<%=data[i].lik%>" id="show-likers<%=i%>"></i><span id="totLike<%=i%>"><%=data[i].like_cnt%>개</span></a>       
                     </div>
                     <div class="read_cnt">
-                      <p id="button2" class="on" onclick="like('<%=data[i].board_key_id%>');">
+                      <p class="on" onclick="like('<%=data[i].board_key_id%>');">
                         조회      <%=data[i].read_cnt%>개</p>
                     </div>
                     <div class="reply_cnt">
-                      <p id="button3" class="on" onclick="like('<%=data[i].board_key_id%>');">
+                      <p class="on" id="reply<%=i%>" value="<%=data[i].reply_cnt%>" onclick="like('<%=data[i].board_key_id%>');">
                         댓글      <%=data[i].reply_cnt%>개</p>
                     </div>
                   </div>
                   <form class="btn_increse">
-                    <div class="btn_wrap">
-                        <p id="button" class="on" onclick="like('<%=data[i].board_key_id%>', '<%=data[i].board_user_id%>','<%=data[i].liked%>', '<%=data[i].like_id%>', '<%=data[i].lik%>');">
-                            좋아요 <i class="<%=data[i].lik%>"></i></p>
-                        <p id="button" class="on" onclick="reply('<%=data[i].board_key_id%>');">
-                            댓글달기 <i class="far fa-comment-dots"></i></p>
+                    <div class="btn_wrap" id="wrap<%=i%>">
+                      <!-- ====================================좋아요 누르기 =====================-->
+                      
+                      <p id="like-button<%=i%>" class="on like" data-bs-key="<%=data[i].board_key_id%>" data-bs-hitlike="hitLike<%=i%>" data-bs-cnt="<%=data[i].like_cnt%>"
+                         data-bs-nick="<%=data[i].board_user_id%>" data-bs-liked="<%=data[i].liked%>" data-bs-pos="open-modal<%=i%>" data-bs-show="show-likers<%=i%>"
+                         data-bs-totcnt="totLike<%=i%>"> 
+                        좋아요 <i class="<%=data[i].lik%>" id="hitLike<%=i%>"></i></p>
+                                        
+                      <!-- ====================================댓글달기 =====================-->
+                      <% if (howami) {%>
+                        <p id="reply-button<%=i%>" class="on collapsed login-reply" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=i%>" 
+                            aria-expanded="true" aria-controls="collapseOne<%=i%>" data-bs-id="<%=data[i].board_key_id%>" data-bs-pos="collapse<%=i%>">
+                          댓글달기 <i class="far fa-comment-dots"></i>
+                        </p>
+                      <%} else {%>
+                        <p id="reply-button<%=i%>" class="on collapsed logout-reply" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=i%>" 
+                          aria-expanded="true" aria-controls="collapseOne<%=i%>" data-bs-id="<%=data[i].board_key_id%>" data-bs-pos="collapse<%=i%>">
+                          댓글달기 <i class="far fa-comment-dots"></i>
+                        </p>
+                      <% } %>
+                          <!-- </h2> -->
+                      <div id="collapseOne<%=i%>" class="accordion-collapse collapse hide" data-bs-target="#collapse<%=i%>" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                          <div class="mb-3">
+                            <div class="container con-reply row" id="collapse<%=i%>">
+                              <!-- <ul class="list-group" id="list-group<%=i%>">                                
+                              </ul> -->
+                              <div class="imsi">
+                                <textarea class="form-control fc" id="formGroupExampleInput<%=i%>" 
+                                  data-bs-key="<%=data[i].board_key_id%>" data-bs-user="<%=data[i].board_user_id%>"
+                                          placeholder="댓글을 입력하세요" ></textarea>
+                                <p id="replyQ<%=i%>" class="btn-bird" type="button">
+                                  <i class="fas fa-paper-plane" data-bs-tx="formGroupExampleInput<%=i%>" data-bs-key="<%=data[i].board_key_id%>" 
+                                    data-bs-nick="<%=id%>" data-bs-pos="reply<%=i%>" data-bs-acc="collapse<%=i%>-ul"></i></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </form>
-                <% } %>
               <% } %>
             <%} %>
         </div>
     </div>
+    <script src="/js/home/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
   </div>
 </body>

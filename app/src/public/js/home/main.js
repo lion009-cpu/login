@@ -1,10 +1,6 @@
 "use strict";
 
-const title = document.querySelector("#recipient-name"),
-      content= document.querySelector("#message-text"),
-      uploadBtn= document.querySelector("#upload");
-
-var exampleModal = document.getElementById('exampleModal')
+var exampleModal = document.getElementById('exampleModal');
 exampleModal.addEventListener('hidden.bs.modal', function (event) {
 
 });
@@ -13,16 +9,17 @@ function eraseText() {
   document.getElementById("message-text").value = "";
 }
 
-function upload() {
-  if(!title.value) return alert("간략증상을 입력해 주십시요.");
-  if(!content.value) return alert("상세증상을 입력해 주십시요.");
 
+function reply(a, b, c, d) {
+  
   const req = {
-      title: title.value,
-      content: content.value,
+      a: a,
+      b: b,
+      c: c,
+      d: d,
   };
 
-  fetch("/upload", {
+  fetch("/reply", {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
@@ -31,7 +28,7 @@ function upload() {
   }).then((res) => res.json())
     .then((res) => {
         if(res.success) {
-            location.href = "/main";              
+            location.href = "/reply";              
         } else {
             if(res.err) return alert(res.err);
             alert(res.msg);
@@ -43,6 +40,7 @@ function upload() {
 exampleModal.addEventListener('show.bs.modal', function (event) {
   // Button that triggered the modal
   var button = event.relatedTarget;
+  
   // Extract info from data-bs-* attributes
   var question_id = button.getAttribute('data-bs-id');
   var likersCnt = button.getAttribute('data-bs-cnt');
@@ -163,6 +161,263 @@ function likers(id) {
     console.log(likeform.name);
          
     likeform.submit() ;
-            
 }
 
+var board_view = document.querySelector('.board_view');
+var currentTarget;
+
+function activate(elem) {
+  elem.classList.add('focus');
+  currentTarget = elem;
+  console.log("activate");
+}
+
+function deactivate(elem) {
+  elem.classList.remove('focus');
+  console.log("deactivate");
+}
+
+function makeUl(id) {
+  var elem =  document.getElementById(id);
+  var elemList = document.createElement('ul');
+  elemList.className = 'list-group';
+  elemList.id = id+"-ul";
+  elem.insertBefore(elemList, elem.firstChild);
+  console.log('makeUl');
+}
+function deleteUl(elem) {  
+  elem.removeChild(elem.firstChild);
+  console.log('delete');
+}
+
+function focusOutHandler(event) {
+  let elem = event.target || event.srcElement;
+
+  while (
+    !elem.classList.contains('fc') && 
+    !elem.classList.contains('open-modal') &&
+    !elem.classList.contains('fas')
+  ) {
+    if(elem.nodeName === 'BODY') {
+      elem = null;
+      // event.stopPropagation();
+      return;
+      
+    }
+    elem = elem.parentNode;
+  }
+  if(currentTarget) {
+    if(currentTarget.classList.contains('fc')) {
+      deactivate(currentTarget);
+    }
+  }
+  if(elem.classList.contains('fc')) {
+    var nodes = elem.parentNode.childNodes;
+    var node = nodes.item(3);
+    var btn = document.getElementById(nodes.item(3).id);
+    btn.style.display = 'none';
+    deactivate(elem);
+  }
+}
+board_view.addEventListener('focusout', focusOutHandler);
+
+function focusInHandler(event) {
+  let elem = event.target || event.srcElement;
+  while (
+    !elem.classList.contains('fc') && 
+    !elem.classList.contains('open-modal')
+  ) {
+    
+    if(elem.nodeName === 'BODY') {
+      elem = null;
+      return;
+    }
+    elem = elem.parentNode;
+  }
+  currentTarget = elem;
+  if(elem.classList.contains('fc')) {
+    var nodes = elem.parentNode.childNodes;
+    var node = nodes.item(3);
+    var btn = document.getElementById(nodes.item(3).id);
+    btn.style.display = 'block';
+  }
+}
+board_view.addEventListener('focusin', focusInHandler);
+
+function mousedownHandler(event) {
+  let elem = event.target || event.srcElement;
+       
+  while (
+    !elem.classList.contains('fc') && //댓글창
+    !elem.classList.contains('login-reply') && //댓글달기 버튼
+    !elem.classList.contains('like') && //좋아요 및 좋아요 취소
+    !elem.classList.contains('open-modal') && //좋아요 리스트 모달 띄우기
+    !elem.classList.contains('fa-paper-plane') //댓글달기
+  ) {
+    
+    if(elem.nodeName === 'BODY') {
+      elem = null;
+      return;
+    }
+    elem = elem.parentNode;
+  }
+  
+  currentTarget = elem;
+  
+  if(elem.classList.contains('fc')) {    
+    if(elem.classList.contains('focus')) {
+    } else {
+      activate(elem);
+    }
+    var nodes = elem.parentNode.childNodes;
+    var node = nodes.item(3);
+    var btn = document.getElementById(nodes.item(3).id);
+    btn.style.display = 'block';
+  }
+  if(elem.classList.contains('like')) {   
+    console.log(elem);
+    updateLikeInfo(elem);
+  }
+  if(elem.classList.contains('fa-paper-plane')) {  //댓글 달기
+    var tx = elem.getAttribute('data-bs-tx'),
+        node = document.getElementById(tx),
+        content = node.value,
+        question_id = node.getAttribute('data-bs-key'),
+        ulid  = elem.getAttribute('data-bs-acc');
+
+    node.value = '';
+    updateReplyCnt(elem);  
+
+    replyQ(question_id, content, elem.getAttribute('data-bs-nick'), ulid);
+  }
+  if(elem.classList.contains('login-reply')) {  //댓글달기버튼 클릭
+    console.log(elem);
+    if(elem.classList.contains('collapsed')) {
+      var pos = elem.getAttribute('data-bs-pos'),
+          parent = document.getElementById(pos);
+      makeUl(parent.id);
+      getReply(elem.getAttribute('data-bs-id'), parent.childNodes.item(0).id);
+    } else {      
+      var pos = elem.getAttribute('data-bs-pos'),
+          parent = document.getElementById(pos);
+      console.log(parent);
+      deleteUl(parent);
+    }
+  }
+}
+board_view.addEventListener('mousedown', mousedownHandler);
+
+function updateReplyCnt(elem) {
+  var pos = elem.getAttribute('data-bs-pos');
+  console.log(pos);
+  var element = document.getElementById(pos);
+  var reply_cnt = Number(element.getAttribute('value'));
+  reply_cnt = reply_cnt+1;
+  element.innerText = "댓글"+reply_cnt+"개";
+}
+function updateLikeInfo(elem) {
+  var liked    = elem.getAttribute('data-bs-liked'), //좋아요 선택 여부
+      show     = elem.getAttribute('data-bs-show'), //좋아요 모달 버튼
+      hitId    = elem.getAttribute('data-bs-hitlike'), //좋아요 버튼
+      modal    = elem.getAttribute('data-bs-pos'), //좋아요 a tag 영역
+      totcnt   = elem.getAttribute('data-bs-totcnt'),
+      hitElem  = document.getElementById(hitId),
+      showElem = document.getElementById(show),
+      modElem  = document.getElementById(modal),
+      totElem  = document.getElementById(totcnt),
+      like_cnt = Number(elem.getAttribute('data-bs-cnt'));//좋아요 
+  
+  if(liked == 1) {
+    console.log("111");
+    like_cnt = like_cnt-1;
+    elem.setAttribute('data-bs-liked', 0);
+    elem.setAttribute('data-bs-cnt', like_cnt);
+    hitElem.className  = 'far fa-thumbs-up';//좋아요 미선택
+    console.log(hitElem);
+    showElem.className = 'far fa-thumbs-up';
+  } else {
+    console.log("222");
+    like_cnt = like_cnt+1;
+    elem.setAttribute('data-bs-liked', 1);
+    elem.setAttribute('data-bs-cnt', like_cnt);
+    hitElem.className  = 'fas fa-thumbs-up';
+    showElem.className = 'fas fa-thumbs-up';
+  }
+  totElem.innerText = like_cnt+'개';
+}
+
+function replyQ(question_id, content, nick, node) {
+
+  if(!content) return alert("댓글을 입력해 주십시요.");
+
+  const req = {
+      question_id: question_id,
+      content: content,
+  };
+
+  console.log(req);
+
+  fetch("/reply", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+  }).then((res) => res.json())
+    .then((res) => {
+        if(res.success) {
+            // location.href = "/main";  
+            var elemList = document.createElement('li');
+            elemList.className = 'list-group-item';
+            elemList.innerHTML = '<dl><dt><span>'+nick+'</span></dt><dd><span>'+content+'</span></dd></dl>';
+            // console.log('#'+node);
+            var mom = document.querySelector('#'+node);
+            console.log(mom);
+            // mom.appendChild(elemList);
+            mom.insertBefore(elemList, mom.firstChild);            
+            // var location = mom.offsetHeigth;
+            // console.log(location);
+            // window.scrollTo({top:location, behavior:'smooth'});
+            mom.scrollIntoView(false);
+        } else {
+            if(res.err) return alert(res.err);
+            alert(res.msg);
+        }
+    }).catch((err) => {
+  });
+}
+
+function getReply(question_id, node) {
+
+
+  const req = {
+      question_id: question_id,
+  };
+
+  fetch("/getReply", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+  }).then((res) => res.json())
+    .then((res) => {
+        if(res.success) {
+            for(var i=0; i<res.result.length; i++) {
+              var elemList = document.createElement('li');
+              elemList.className = 'list-group-item';
+              elemList.innerHTML = '<dl><dt><span>'+res.result[i].user_id+'</span></dt><dd><span>'+res.result[i].contents+'</span></dd></dl>';
+              // console.log(elemList);
+              // console.log('#'+node);
+              var mom = document.querySelector('#'+node);
+              // console.log(mom);
+              // mom.appendChild(elemList);
+              mom.insertBefore(elemList, mom.firstChild);              
+            }
+        } else {
+            if(res.err) return alert(res.err);
+            alert(res.msg);
+        }
+    }).catch((err) => {
+  });
+}

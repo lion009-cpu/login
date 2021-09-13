@@ -37,8 +37,38 @@ async function loadNavi(req, res) {
     res.render("home/navigation", {data:response});
 }
 
+async function loadSymptom(req, res) {
+    const symptom = new Symptom();
+    const response = await symptom.navigation();            
+
+    logger.info(`GET /symptom 304 "대표증상 화면으로 이동"`);
+    res.render("home/symptom", {data:response});
+}
+
+async function loadUpload(req, res) {          
+
+    logger.info(`GET /upload 304 "글쓰기 화면으로 이동"`);
+    res.render("home/upload", {nick:req.session.user.body.id, symptom_code:req.session.symptom_code, direction: req.session.direction});
+}
+
+async function loadReply(req, res) {           
+
+    logger.info(`GET /reply 304 "글쓰기 화면으로 이동"`);
+    res.render("home/reply", {nick:req.session.user.body.id, symptom_code:req.session.symptom_code, direction: req.session.direction});
+}
+
+async function loadLogin(req, res) {
+    
+    if(await isAuthOwner(req, res)) {
+        await loadNavi(req, res);
+    } else {
+        logger.info(`GET /login 304 "로그인 화면으로 이동"`);
+        res.render("home/login");
+    }
+}
+
 async function isAuthOwner(req, res) {
-    if(req.session.isLogined) {
+    if(req.session.hasOwnProperty('isLogined') && req.session.isLogined) {
         return true;
     } else {
         return false;
@@ -53,12 +83,7 @@ const output = {
     
     login: async (req, res) => {
         console.log(req.session);
-        if(await isAuthOwner(req, res)) {
-            await loadNavi(req, res);
-        } else {
-            logger.info(`GET /login 304 "로그인 화면으로 이동"`);
-            res.render("home/login");
-        }
+        await loadLogin(req, res);
     },
 
     register: (req, res) => {
@@ -67,20 +92,21 @@ const output = {
     },
 
     main: async (req, res) => {
-        if(await isAuthOwner(req, res)) {
-            req.body.id = req.session.user.body.id;
+        var isLogined = "";
+        if(isLogined = await isAuthOwner(req, res)) {
+            req.body.id = req.session.user.body.id;             
         } else {
-            req.session.isLogined = false;
+            delete req.session.isLogined;
+            isLogined = false;
         }
         
         req.body.symptom_id = symptom_code;
-        const board = new Board(req.body);        
-        const response = await board.search();
-        // const result = await board.likers();
+        const board = new Board(req.body);  
+        const response = await board.search(); 
         // console.log(response);
 
         logger.info(`GET /main 304 "홈 화면으로 이동"`);
-        res.render("home/main", {data : response, symp_nm : symptom_nm, howami: req.session.isLogined});
+        res.render("home/main", {data : response, symp_nm : symptom_nm, howami: isLogined, id: req.session.user.body.id});
     },
 
     home: async (req, res) => {
@@ -101,42 +127,72 @@ const output = {
         res.render("home/listview");
     },
 
-    upload: (req, res) => {
-        console.log(category);
-        console.log(symptom_code);
-        if(isAuthOwner(req, res)) {
-            logger.info(`GET /upload 304 "글쓰기 화면으로 이동"`);
-            res.render("home/upload");
+    upload: async (req, res) => {
+
+        if(req.session.hasOwnProperty('direction') && req.session.direction !=="") {
+            if(req.session.hasOwnProperty('symptom_code') && req.session.symtom_code !=="") {
+                if(await isAuthOwner(req, res)) {
+                    await loadUpload(req, res);
+                } else {
+                    alert('로그인이 필요합니다');
+                    await loadLogin(req, res);
+                }
+            } else {
+                alert('병증을 선택해야 합니다.');
+                await loadSymptom(req, res);
+            }
         } else {
-            logger.info(`GET /login 304 "로그인 화면으로 이동"`);
-            res.render("home/login");
+            alert('먼저 어떻게 참여할지 결정하세요');
+            await loadNavi(req, res);
+        }
+    },
+
+    reply: async (req, res) => {
+
+        if(req.session.hasOwnProperty('direction') && req.session.direction !=="") {
+            if(req.session.hasOwnProperty('symptom_code') && req.session.symtom_code !=="") {
+                if(await isAuthOwner(req, res)) {
+                    await loadReply(req, res);
+                } else {
+                    await loadLogin(req, res);
+                }
+            } else {
+                await loadSymptom(req, res);
+            }
+        } else {
+            await loadNavi(req, res);
         }
     },
 
     navigation: async (req, res) => {
+        var isLogined = "";
         const hint = new Hint();
         const response = await hint.navigation();
 
-        if(await isAuthOwner(req, res)) {
+        if(isLogined = await isAuthOwner(req, res)) {
         } else {
-            req.session.isLogined = false;
-        }
+            delete req.session.isLogined;
+            isLogined = false;    
+        }   
 
         logger.info(`GET /navigation 304 "안내 화면으로 이동"`);
-        res.render("home/navigation", {data : response, howami: req.session.isLogined});
+        res.render("home/navigation", {data : response, howami: isLogined});
     },
 
-    symptom: async (req, res) => {
-        const symptom = new Symptom();
-        const response = await symptom.navigation();
-
-        if(await isAuthOwner(req, res)) {
+    symptom: async (req, res) => {        
+        var isLogined = "";
+        console.log(req.session.isLogined);
+        console.log(req.session.hasOwnProperty('direction'));
+        if(isLogined = await isAuthOwner(req, res)) {
         } else {
-            req.session.isLogined = false;
+            delete req.session.isLogined;
+            isLogined = false;
         }
-
-        logger.info(`GET /symptom 304 "대표증상 화면으로 이동"`);
-        res.render("home/symptom", {data:response, howami: req.session.isLogined});
+        if(req.session.hasOwnProperty('direction')) {
+            await loadSymptom(req, res, isLogined);
+        } else {
+            await loadNavi(req, res);            
+        }
     },
 
     readboard: async (req, res) => {
@@ -203,13 +259,19 @@ const process = {
     },
 
     navigation: async (req, res) => {  
-        category = req.body.direction;
+        // category = req.body.direction;
+        if(req.body.hasOwnProperty('direction') && req.body.direction != "") {
+            req.session.direction = req.body.direction;
+        } else {
+            delete req.session.direction;
+        }
 
         return res.status('201').json({success: true});   
     },
 
     upload: async (req, res) => {  
-        req.body.direction = category;//참여형태
+
+        req.body.direction = req.session.direction;//참여형태
         req.body.id = req.session.user.body.id;
         req.body.symp_code = symptom_code;
 
@@ -228,9 +290,51 @@ const process = {
         return res.status(url.status).json(response);        
     },
 
+    reply: async (req, res) => {  
+
+        req.body.direction = req.session.direction;//참여형태
+        req.body.id = req.session.user.body.id;//nick name
+        req.body.symp_code = symptom_code;//증상유형
+
+        console.log(req.body);
+        const board = new Board(req.body);
+        
+        const response = await board.reply();
+
+        const url = {
+            method: "POST",
+            path: "/upload",
+            status: response.err ? 400 : 201,
+        };
+
+        return res.status('201').json({success: true});    
+    },
+
+    getReply: async (req, res) => {
+        if(req.body.hasOwnProperty('question_id') && req.body.question_id !== "") {
+            console.log(req.body.question_id)
+            var board = new Board(req.body);        
+            var response = await board.getReply();
+        } 
+        
+        // const url = {
+        //     method: "POST",
+        //     path: "/getReply",
+        //     status: response.err ? 400 : 201,
+        // };
+        
+        return res.status('201').json({success: true, result: response});     
+    },
+
     symptom: async (req, res) => {
-        symptom_code = req.body.key_code;
-        symptom_nm = req.body.key_nm;
+        if(req.body.hasOwnProperty('key_code') && req.body.key_code !== "") {
+            req.session.symptom_code = req.body.key_code;
+            symptom_code = req.body.key_code;
+            symptom_nm = req.body.key_nm;
+        } else {
+            delete req.session.symptom_code;
+        }       
+        
         return res.status('201').json({success: true});     
     },
 

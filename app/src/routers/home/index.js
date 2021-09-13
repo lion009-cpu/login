@@ -17,6 +17,7 @@ router.get('/board', ctrl.output.board);
 router.get('/listview', ctrl.output.listview);
 router.get('/main', ctrl.output.main);
 router.get('/readboard', ctrl.output.readboard);
+router.get('/reply', ctrl.output.reply);
 
 router.post('/hello', ctrl.process.hello);
 router.post('/login', ctrl.process.login);
@@ -29,5 +30,7 @@ router.post('/readboard', ctrl.process.readboard);
 router.post('/like', ctrl.process.like);
 router.post('/unlike', ctrl.process.unlike);
 router.post('/likers', ctrl.process.likers);
+router.post('/reply', ctrl.process.reply);
+router.post('/getReply', ctrl.process.getReply);
 
 module.exports = router;

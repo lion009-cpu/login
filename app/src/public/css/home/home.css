@@ -14,7 +14,7 @@
     color: #bbbbbb;
 }
 .navbar-expand-sm .navbar-nav > .open > a,
-.navbar-expand-sm .navbar-nav > .open > a:hover >
+.navbar-expand-sm .navbar-nav > .open > a:hover, 
 .navbar-expand-sm .navbar-nav > .open > a:focus {
     color: #000000;
     background-color: #ffffff;
@@ -36,9 +36,35 @@
 .btn-success {
     padding: 8px 12px; 
 }
+.static-item {pointer-events: none;}
+.logout-reply {pointer-events: none;}
+.con-reply {padding-top:10px; display: flex; flex-direction: row;}
+.imsi {display:flex;}
+.fc {
+    font-size: 14px;
+    background-color: bisque;
+}
+.focus {
+    background-color: bisque;
+    width: 90%;    
+}
+.con-reply .imsi > p {
+    cursor: pointer;
+    display: none;
+    /* pointer-events: null */
+}
+.login-reply, .like {
+    cursor: pointer;
+}
+
 
 
 @media screen and (max-width: 768px) {
-    
-
+    .navbar-expand-sm .navbar-nav > .open .dropdown-menu > ll > a {
+        color: #ffffff;
+    }
+    .navbar-expand-sm .navbar-nav > .open .dropdown-menu > ll > a:hover, 
+    .navbar-expand-sm .navbar-nav > .open .dropdown-menu > ll > a:focus {
+        color: #bbbbbb;
+    }
 } 

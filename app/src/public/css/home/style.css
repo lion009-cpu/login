@@ -254,13 +254,38 @@ a:hover {
     background: #f5f7fb;
     font-family: "Roboto", sans-serif;
 }
-.container {
+.main-container {
     padding-top: 60px;    
 }
 .modal { 
     /* top: 50%; left: 50%; transform: translate(-50%, -50%);  */
          box-shadow: 0 0 10px rgba(0,0,0,0.5); }
 .modal-header {
-    /* flex-direction: row-reverse; */
+    flex-direction: row-reverse;
 }
 .fade { transition: all 0.5s; }
+.accordion-body {
+}
+.list-group-item {
+    font-size: 14px;
+}
+.list-group-item {
+    border-inline: none;
+    float: left;
+}
+.list-group {
+    overflow-y: auto;
+    height: 200px;
+}
+/* #search{
+    width: 480px;
+    height: 49px;
+    border: 3px solid black;
+    padding: 1px 0 0 48px;
+    font-size: 22px;
+    color: blue;
+    background-image: url('images/search.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    outline: 0;
+} */

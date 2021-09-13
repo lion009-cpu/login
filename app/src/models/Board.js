@@ -16,11 +16,30 @@ class Board {
         }
     }
 
+    async reply() {
+        try {  
+            const response = await BoardStorage.reply(this.body);
+            return response;
+        } catch(err) {
+            return {success : false, err};
+        }
+    }
+
+    async getReply() {
+        try {  
+            const response = await BoardStorage.getReply(this.body);
+            return response;
+        } catch(err) {
+            return {success : false, err};
+        }
+    }
+
     async search() {        
         try {            
             const response = await BoardStorage.search(this.body);
             return response;
         } catch(err) {
+            console.log(err);
             return {success : false, err};
         }
     }
