@@ -74,7 +74,7 @@ class BoardStorage {
             +"       sum(if(c.question_id is null, 0, 1)) like_cnt "
             +"FROM user_board a "
             +"     left outer join like_board c on a.question_id = c.question_id "
-            +"     left outer join like_board d on c.like_id = d.like_id and d.id = ? "
+            +"     left outer join like_board d on a.question_id = d.question_id and d.id = ? "
             +"group by a.question_id ) "
             +"select a.*, b.liked, b.lik, b.like_cnt "
             +"from user_reply a, user_like b "
@@ -105,6 +105,7 @@ class BoardStorage {
             const query = 
             "INSERT INTO like_board(question_id, id, creat_dt) VALUES(?,?,date_format(now(), '%Y%m%d'));";
             db.query(query, [body.question_id, body.id], (err) => {
+                console.log(query);
                 if(err) reject(`${err}`);
                 else resolve({success: true});
             });      
@@ -113,8 +114,8 @@ class BoardStorage {
 
     static async cancle(body) {
         return new Promise((resolve, reject) => { 
-            const query = "DELETE FROM like_board WHERE like_id = ?;";
-            db.query(query, [body.like_id], (err) => {
+            const query = "DELETE FROM like_board WHERE id = ? and question_id = ?;";
+            db.query(query, [body.id, body.question_id], (err) => {
                 if(err) reject(`${err}`);
                 else resolve({success: true});
             });          

@@ -58,14 +58,14 @@
         </ul>
       </div>
     </div>
-  </nav> 
+  </nav>
   <!-- 좋아요 모달  -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-      <div class="modal-content">
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-fullsize modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-content modal-fullsize">
         <div class="modal-header">
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
-          <h5 class="modal-title" id="exampleModalLabel">모두 </h5>
+          <h5 class="modal-title" id="exampleModalLongTitle">모두 </h5>
         </div>
         <div class="modal-body">
           <div class="likers-list" id="likers-list"></div>          
@@ -73,6 +73,44 @@
       </div>
     </div>
   </div> 
+  <!-- alert login modal -->
+  <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header alert-header">
+          <h5 class="modal-title" id="alertModalLabel">로그인 상태가 아닙니다.</h5>
+          <button type="button" class="btn-close" id="loginAlertEx" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="alertModalBody">
+          <h4><span>로그인 하세요!!!</span></h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+        </div>
+      </div>
+    </div>
+  </div>  
+  <!-- alert error modal -->
+  <div class="modal fade" id="alertErrorModal" tabindex="-1" role="dialog" aria-labelledby="alertErrorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header alert-header">
+          <h5 class="modal-title" id="alertErrorModalLabel">로그인 상태가 아닙니다.</h5>
+          <button type="button" class="btn-close" id="errorAlertEx" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="alertErrorModalBody">
+          <h4><span>로그인 하세요!!!</span></h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+        </div>
+      </div>
+    </div>
+  </div>  
   <div class="container main-container">  
     <div class="d-grid gap-2">
       <!-- ==============게시글 쓰기 버튼================== -->
@@ -81,7 +119,7 @@
         <a href="#" class="on"><span class="mb-0 h3">증상올리기</span></a></button> -->
         <button class="btn btn-success" type="button" >        
         <a href="/upload" class="on"><span class="mb-0 h3">증상올리기</span></a></button>
-    </div>   
+    </div>        
     <div class="board_wrap">
         <div class="board_view">
             <% if (data.length == 0) {%>
@@ -140,7 +178,7 @@
                       <!-- <p id="button1" class="on" onclick="likers('<%=data[i].board_key_id%>');">
                       <p><i class="<%=data[i].lik%>"></i>      <%=data[i].like_cnt%>개</p> -->
                       <a href='#exampleModal' role="button" class="open-modal" id="open-modal<%=i%>"
-                           data-bs-toggle="modal" data-bs-id="<%=data[i].board_key_id%>">
+                           data-bs-toggle="modal" data-bs-id="<%=data[i].board_key_id%>" data-bs-cnt="<%=data[i].like_cnt%>">
                            <i class="<%=data[i].lik%>" id="show-likers<%=i%>"></i><span id="totLike<%=i%>"><%=data[i].like_cnt%>개</span></a>       
                     </div>
                     <div class="read_cnt">
@@ -154,26 +192,16 @@
                   </div>
                   <form class="btn_increse">
                     <div class="btn_wrap" id="wrap<%=i%>">
-                      <!-- ====================================좋아요 누르기 =====================-->
-                      
+                      <!-- ====================================좋아요 누르기 =====================-->                      
                       <p id="like-button<%=i%>" class="on like" data-bs-key="<%=data[i].board_key_id%>" data-bs-hitlike="hitLike<%=i%>" data-bs-cnt="<%=data[i].like_cnt%>"
                          data-bs-nick="<%=data[i].board_user_id%>" data-bs-liked="<%=data[i].liked%>" data-bs-pos="open-modal<%=i%>" data-bs-show="show-likers<%=i%>"
-                         data-bs-totcnt="totLike<%=i%>"> 
-                        좋아요 <i class="<%=data[i].lik%>" id="hitLike<%=i%>"></i></p>
-                                        
-                      <!-- ====================================댓글달기 =====================-->
-                      <% if (howami) {%>
-                        <p id="reply-button<%=i%>" class="on collapsed login-reply" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=i%>" 
-                            aria-expanded="true" aria-controls="collapseOne<%=i%>" data-bs-id="<%=data[i].board_key_id%>" data-bs-pos="collapse<%=i%>">
-                          댓글달기 <i class="far fa-comment-dots"></i>
-                        </p>
-                      <%} else {%>
-                        <p id="reply-button<%=i%>" class="on collapsed logout-reply" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=i%>" 
+                         data-bs-totcnt="totLike<%=i%>" data-bs-status="<%=howami%>" data-bs-likeid="<%=data[i].like_id%>"> 
+                        좋아요 <i class="<%=data[i].lik%>" id="hitLike<%=i%>" data-bs-status="<%=howami%>" data-bs-likeid="<%=data[i].like_id%>"></i></p>                                        
+                      <!-- ====================================댓글달기 =====================-->                      
+                      <p id="reply-button<%=i%>" class="on collapsed login-reply" data-bs-toggle="collapse" data-bs-target="#collapseOne<%=i%>" data-bs-tot="reply<%=i%>"
                           aria-expanded="true" aria-controls="collapseOne<%=i%>" data-bs-id="<%=data[i].board_key_id%>" data-bs-pos="collapse<%=i%>">
-                          댓글달기 <i class="far fa-comment-dots"></i>
-                        </p>
-                      <% } %>
-                          <!-- </h2> -->
+                        댓글달기 <i class="far fa-comment-dots" data-bs-tot="reply<%=i%>"></i>
+                      </p>                      
                       <div id="collapseOne<%=i%>" class="accordion-collapse collapse hide" data-bs-target="#collapse<%=i%>" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                           <div class="mb-3">
@@ -182,11 +210,11 @@
                               </ul> -->
                               <div class="imsi">
                                 <textarea class="form-control fc" id="formGroupExampleInput<%=i%>" 
-                                  data-bs-key="<%=data[i].board_key_id%>" data-bs-user="<%=data[i].board_user_id%>"
-                                          placeholder="댓글을 입력하세요" ></textarea>
-                                <p id="replyQ<%=i%>" class="btn-bird" type="button">
-                                  <i class="fas fa-paper-plane" data-bs-tx="formGroupExampleInput<%=i%>" data-bs-key="<%=data[i].board_key_id%>" 
-                                    data-bs-pos="reply<%=i%>" data-bs-acc="collapse<%=i%>-ul"></i></p>
+                                  data-bs-key="<%=data[i].board_key_id%>" data-bs-user="<%=data[i].board_user_id%>"  placeholder="댓글을 입력하세요" ></textarea>
+                                <p id="replyQ<%=i%>" class="btn-bird" type="button" data-bs-acc="collapse<%=i%>-ul" data-bs-pos="reply<%=i%>" data-bs-user="<%=id%>" 
+                                  data-bs-tx="formGroupExampleInput<%=i%>" data-bs-key="<%=data[i].board_key_id%>" data-bs-status="<%=howami%>" data-target="#alertModal">
+                                  <i class="fas fa-paper-plane" data-bs-tx="formGroupExampleInput<%=i%>" data-bs-key="<%=data[i].board_key_id%>" data-bs-user="<%=id%>" 
+                                    data-bs-pos="reply<%=i%>" data-bs-acc="collapse<%=i%>-ul" data-bs-status="<%=howami%>" data-target="#alertModal"></i></p>
                               </div>
                             </div>
                           </div>

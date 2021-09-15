@@ -94,19 +94,17 @@ const output = {
     main: async (req, res) => {
         var isLogined = "";
         if(isLogined = await isAuthOwner(req, res)) {
-            req.body.id = req.session.user.body.id;             
+            req.body.id = req.session.user.body.id;                         
         } else {
             delete req.session.isLogined;
-            isLogined = false;
         }
         
         req.body.symptom_id = symptom_code;
         const board = new Board(req.body);  
         const response = await board.search(); 
         // console.log(response);
-
         logger.info(`GET /main 304 "홈 화면으로 이동"`);
-        res.render("home/main", {data : response, symp_nm : symptom_nm, howami: isLogined});
+        res.render("home/main", {data : response, symp_nm : symptom_nm, howami: isLogined, id: req.session.user.body.id});
     },
 
     home: async (req, res) => {
@@ -349,40 +347,25 @@ const process = {
     },
 
     like: async (req, res) => {
-        if(await isAuthOwner(req, res)) {
-            req.body.id=req.session.user.body.id;
-            const board = new Board(req.body);
-            console.log(req.body);
-            let response="";
-            if(req.body.liked === "0") {
-                response = await board.like(); 
-            } else {
-                response = await board.cancle();
-            }
-            
-            const url = {
-                method: "POST",
-                path: "/upload",
-                status: response.err ? 400 : 201,
-            };
-    
-            // log(response, url);
-            // return res.status(url.status).json(response); 
-            
-            console.log(response);
-
-            if(response.success) { 
-                if(req.body.liked === "0") {
-                    return res.status('201').json({success:true, liked:'1', lik_cd:'fas fa-thumbs-up'});
-                } else {
-                    return res.status('201').json({success:true, liked:'0', lik_cd:'far fa-thumbs-up'});
-                }
-            } else {
-                return res.status('201').json({success: false, err});
-            }
+        // if(await isAuthOwner(req, res)) {
+        req.body.id=req.session.user.body.id;
+        const board = new Board(req.body);
+        console.log(req.body);
+        let response="";
+        if(req.body.liked === "0") {
+            response = await board.like(); 
         } else {
-            return res.status('201').json({success: false, msg:"로그인이 필요합니다."});
+            response = await board.cancle();
         }
+        
+        const url = {
+            method: "POST",
+            path: "/like",
+            status: response.err ? 400 : 201,
+        };
+
+        log(response, url);
+        return res.status(url.status).json(response); 
     },
 
     unlike: async (req, res) => {

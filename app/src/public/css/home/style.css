@@ -263,6 +263,9 @@ a:hover {
 .modal-header {
     flex-direction: row-reverse;
 }
+.alert-header {
+    flex-direction: row;
+}
 .fade { transition: all 0.5s; }
 .accordion-body {
 }
@@ -277,6 +280,22 @@ a:hover {
     overflow-y: auto;
     height: 200px;
 }
+.alert {
+    display: none;
+}
+.modal-dialog.modal-fullsize {
+    width: 100%;
+    height: 50%;
+    vertical-align: middle;
+    /* margin: 0;
+    padding: 0; */
+  }
+  .modal-content.modal-fullsize {
+    height: auto;
+    min-height: 100%;
+    border-radius: 0; 
+  }
+  
 /* #search{
     width: 480px;
     height: 49px;

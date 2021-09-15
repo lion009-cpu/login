@@ -1,9 +1,5 @@
 "use strict";
 
-var exampleModal = document.getElementById('exampleModal');
-exampleModal.addEventListener('hidden.bs.modal', function (event) {
-
-});
 
 function eraseText() {
   document.getElementById("message-text").value = "";
@@ -52,6 +48,7 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
   var likersList = exampleModal.querySelector('#likers-list');
 
   modalTitle.textContent = '모두 ' + likersCnt;
+
   const req = {
     question_id: question_id,
   }
@@ -108,36 +105,6 @@ function popupread(q_id, nick, dt, r_cnt, s_cnt, stat, cont, symp) {
           } else {
               if(res.err) return alert(res.err);
               alert(res.msg);
-          }
-      }).catch((err) => {
-    });
-}
-
-function like(q_id, nick, ed, li_id, lik) {
-
-    const req = {
-        question_id: q_id,
-        id: nick,
-        liked: ed,
-        like_id: li_id,
-        lik_cd: lik,        
-    };
-
-    fetch("/like", {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-      },
-      body: JSON.stringify(req),
-    }).then((res) => res.json())
-      .then((res) => {
-          if(res.success) {
-              location.href = "/main";
-            // res.send(true);
-          } else {
-            // if(res.err) return alert(res.err);
-            alert(res.msg);
-            location.href = "/login";
           }
       }).catch((err) => {
     });
@@ -252,7 +219,8 @@ function mousedownHandler(event) {
     !elem.classList.contains('login-reply') && //댓글달기 버튼
     !elem.classList.contains('like') && //좋아요 및 좋아요 취소
     !elem.classList.contains('open-modal') && //좋아요 리스트 모달 띄우기
-    !elem.classList.contains('fa-paper-plane') //댓글달기
+    !elem.classList.contains('fa-paper-plane') &&//댓글달기
+    !elem.classList.contains('btn-bird')
   ) {
     
     if(elem.nodeName === 'BODY') {
@@ -275,28 +243,55 @@ function mousedownHandler(event) {
     btn.style.display = 'block';
   }
   if(elem.classList.contains('like')) {   
-    console.log(elem);
-    updateLikeInfo(elem);
-  }
-  if(elem.classList.contains('fa-paper-plane')) {  //댓글 달기
-    var tx = elem.getAttribute('data-bs-tx'),
-        node = document.getElementById(tx),
-        content = node.value,
-        question_id = node.getAttribute('data-bs-key'),
-        ulid  = elem.getAttribute('data-bs-acc');
+    if(elem.getAttribute('data-bs-status')) { 
+      updateLikeDb(elem);
+    } else {
+      var strTitle     = '로그인 상태가 아닙니다.',
+          strContent   = '<h4><span>로그인 하세요!!!</span></h4>',
+          strTarget    = '#alertModal',
+          strTitleId   = '#alertModalLabel',
+          strContentId = '#alertModalBody';
 
-    node.value = '';
-    updateReplyCnt(elem);  
-
-    replyQ(question_id, content, elem.getAttribute('data-bs-nick'), ulid);
+      callModal(strTarget, strTitleId, strTitle, strContentId, strContent);
+    }
   }
+  if(elem.classList.contains('fa-paper-plane') || elem.classList.contains('btn-bird')) {  //댓글 달기
+    if(elem.getAttribute('data-bs-status')) {
+      var tx = elem.getAttribute('data-bs-tx'),
+          node = document.getElementById(tx),
+          content = node.value,
+          question_id = node.getAttribute('data-bs-key'),
+          ulid  = elem.getAttribute('data-bs-acc');
+      node.value = '';
+      if(content) {
+        updateReplyCnt(elem);  
+        replyQ(question_id, content, elem.getAttribute('data-bs-user'), ulid);  
+      } else {
+        var strTitle     = '필수항목누락.',
+            strContent   = '<h4><span>댓글을 입력 하세요!!!</span></h4>',
+            strTarget    = '#alertErrorModal',
+            strTitleId   = '#alertErrorModalLabel',
+            strContentId = '#alertErrorModalBody';
+
+        callModal(strTarget, strTitleId, strTitle, strContentId, strContent);
+      }
+    } else {
+      var strTitle     = '로그인 상태가 아닙니다.',
+          strContent   = '<h4><span>로그인 하세요!!!</span></h4>',
+          strTarget    = '#alertModal',
+          strTitleId   = '#alertModalLabel',
+          strContentId = '#alertModalBody';
+
+      callModal(strTarget, strTitleId, strTitle, strContentId, strContent);
+    }
+  }    
+  
   if(elem.classList.contains('login-reply')) {  //댓글달기버튼 클릭
-    console.log(elem);
     if(elem.classList.contains('collapsed')) {
       var pos = elem.getAttribute('data-bs-pos'),
           parent = document.getElementById(pos);
       makeUl(parent.id);
-      getReply(elem.getAttribute('data-bs-id'), parent.childNodes.item(0).id);
+      getReply(elem, elem.getAttribute('data-bs-id'), parent.childNodes.item(0).id);
     } else {      
       var pos = elem.getAttribute('data-bs-pos'),
           parent = document.getElementById(pos);
@@ -305,6 +300,7 @@ function mousedownHandler(event) {
     }
   }
 }
+
 board_view.addEventListener('mousedown', mousedownHandler);
 
 function updateReplyCnt(elem) {
@@ -313,7 +309,7 @@ function updateReplyCnt(elem) {
   var element = document.getElementById(pos);
   var reply_cnt = Number(element.getAttribute('value'));
   reply_cnt = reply_cnt+1;
-  element.innerText = "댓글"+reply_cnt+"개";
+  element.innerText = "댓글 "+reply_cnt+"개";
 }
 function updateLikeInfo(elem) {
   var liked    = elem.getAttribute('data-bs-liked'), //좋아요 선택 여부
@@ -326,36 +322,74 @@ function updateLikeInfo(elem) {
       modElem  = document.getElementById(modal),
       totElem  = document.getElementById(totcnt),
       like_cnt = Number(elem.getAttribute('data-bs-cnt'));//좋아요 
-  
+
   if(liked == 1) {
-    console.log("111");
     like_cnt = like_cnt-1;
     elem.setAttribute('data-bs-liked', 0);
     elem.setAttribute('data-bs-cnt', like_cnt);
+    modElem.setAttribute('data-bs-cnt', like_cnt);
     hitElem.className  = 'far fa-thumbs-up';//좋아요 미선택
     console.log(hitElem);
     showElem.className = 'far fa-thumbs-up';
   } else {
-    console.log("222");
     like_cnt = like_cnt+1;
     elem.setAttribute('data-bs-liked', 1);
     elem.setAttribute('data-bs-cnt', like_cnt);
+    modElem.setAttribute('data-bs-cnt', like_cnt);
     hitElem.className  = 'fas fa-thumbs-up';
     showElem.className = 'fas fa-thumbs-up';
   }
   totElem.innerText = like_cnt+'개';
 }
 
-function replyQ(question_id, content, nick, node) {
+function callModal(strTarget, strTitleId, strTitle, strContentId, strContent) {
+  $(document).ready(function() {
+    $(strTitleId)[0].innerText = strTitle;
+    $(strContentId)[0].innerHTML = strContent;
+    $(strTarget).modal('show');   
+  });
+}
 
-  if(!content) return alert("댓글을 입력해 주십시요.");
+$(document).ready(() => {
+  $('#alertModal').on('hidden.bs.modal', function () {    
+    location.href = "/login";
+  });
+  $('#alertErrorModal').on('hidden.bs.modal', function (event) { 
+  });
+});
+
+function updateLikeDb(elem) {
+
+  const req = {
+    question_id: elem.getAttribute('data-bs-key'),
+    liked: elem.getAttribute('data-bs-liked'),
+  };
+
+  fetch("/like", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(req),
+  }).then((res) => res.json())
+    .then((res) => {
+      if(res.success) {
+        updateLikeInfo(elem);
+      } else {
+          if(res.err) {
+            return alert(res.err);
+          }
+          alert(res.msg);
+      }
+    }).catch((err) => {
+  });
+}
+function replyQ(question_id, content, nick, node) {
 
   const req = {
       question_id: question_id,
       content: content,
   };
-
-  console.log(req);
 
   fetch("/reply", {
       method: "POST",
@@ -380,15 +414,16 @@ function replyQ(question_id, content, nick, node) {
             // window.scrollTo({top:location, behavior:'smooth'});
             mom.scrollIntoView(false);
         } else {
-            if(res.err) return alert(res.err);
+            if(res.err) {
+              return alert(res.err);
+            }
             alert(res.msg);
         }
     }).catch((err) => {
   });
 }
 
-function getReply(question_id, node) {
-
+function getReply(elem, question_id, node) {
 
   const req = {
       question_id: question_id,
@@ -412,8 +447,10 @@ function getReply(question_id, node) {
               var mom = document.querySelector('#'+node);
               // console.log(mom);
               // mom.appendChild(elemList);
-              mom.insertBefore(elemList, mom.firstChild);              
+              mom.insertBefore(elemList, mom.firstChild);                           
             }
+            console.log(document.getElementById(elem.getAttribute('data-bs-tot')));
+            document.getElementById(elem.getAttribute('data-bs-tot')).innerText = '댓글 '+res.result.length+'개';
         } else {
             if(res.err) return alert(res.err);
             alert(res.msg);
@@ -421,3 +458,4 @@ function getReply(question_id, node) {
     }).catch((err) => {
   });
 }
+
