@@ -1,6 +1,5 @@
 "use strict";
 
-
 function eraseText() {
   document.getElementById("message-text").value = "";
 }
@@ -33,6 +32,7 @@ function reply(a, b, c, d) {
     });
 }
 
+var exampleModal = document.getElementById('exampleModal');
 exampleModal.addEventListener('show.bs.modal', function (event) {
   // Button that triggered the modal
   var button = event.relatedTarget;
@@ -67,7 +67,7 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
             for(var i=0; i<res.likers.length; i++) {
               // likersList.textContent = res.likers[i].id+'가 좋아해요';
               text += "<ul>\n"
-              text += "<li><h5>" + res.likers[i].id + "</h5></li>\n"
+              text += "<li><h5>" + res.likers[i].id + "가 좋아해요</h5></li>\n"
               text += "</ul>\n"
             }
             console.log(text);
@@ -211,7 +211,7 @@ function focusInHandler(event) {
 }
 board_view.addEventListener('focusin', focusInHandler);
 
-function mousedownHandler(event) {
+async function mousedownHandler(event) {
   let elem = event.target || event.srcElement;
        
   while (
@@ -243,7 +243,8 @@ function mousedownHandler(event) {
     btn.style.display = 'block';
   }
   if(elem.classList.contains('like')) {   
-    if(elem.getAttribute('data-bs-status')) { 
+    var response = await isSessioned(elem);
+    if(response.success) {
       updateLikeDb(elem);
     } else {
       var strTitle     = '로그인 상태가 아닙니다.',
@@ -256,7 +257,9 @@ function mousedownHandler(event) {
     }
   }
   if(elem.classList.contains('fa-paper-plane') || elem.classList.contains('btn-bird')) {  //댓글 달기
-    if(elem.getAttribute('data-bs-status')) {
+    
+    var response = await isSessioned(elem);
+    if(response.success) {
       var tx = elem.getAttribute('data-bs-tx'),
           node = document.getElementById(tx),
           content = node.value,
@@ -302,6 +305,36 @@ function mousedownHandler(event) {
 }
 
 board_view.addEventListener('mousedown', mousedownHandler);
+
+function isSessioned(elem) {
+
+  const req = {
+    log: elem.getAttribute('data-bs-status'),
+  };  
+  
+  console.log(req);
+
+  return new Promise((resolve, reject) => {
+    fetch("/session", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+    }).then((res) => res.json())
+      .then((res) => {
+        if(res.success) {
+          resolve(res);
+        } else {
+            if(res.err) {     
+              return res;
+            }
+            resolve(res);
+        }
+      }).catch((err) => {
+    });
+  });  
+}
 
 function updateReplyCnt(elem) {
   var pos = elem.getAttribute('data-bs-pos');
@@ -384,6 +417,7 @@ function updateLikeDb(elem) {
     }).catch((err) => {
   });
 }
+
 function replyQ(question_id, content, nick, node) {
 
   const req = {

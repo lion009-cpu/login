@@ -69,6 +69,7 @@ async function loadLogin(req, res) {
 
 async function isAuthOwner(req, res) {
     if(req.session.hasOwnProperty('isLogined') && req.session.isLogined) {
+        console.log(req.session.isLogined);
         return true;
     } else {
         return false;
@@ -93,8 +94,10 @@ const output = {
 
     main: async (req, res) => {
         var isLogined = "";
+        var id = "";
         if(isLogined = await isAuthOwner(req, res)) {
-            req.body.id = req.session.user.body.id;                         
+            req.body.id = req.session.user.body.id; 
+            id = req.body.id;
         } else {
             delete req.session.isLogined;
         }
@@ -104,7 +107,7 @@ const output = {
         const response = await board.search(); 
         // console.log(response);
         logger.info(`GET /main 304 "홈 화면으로 이동"`);
-        res.render("home/main", {data : response, symp_nm : symptom_nm, howami: isLogined, id: req.session.user.body.id});
+        res.render("home/main", {data : response, symp_nm : symptom_nm, howami: isLogined, id: id});
     },
 
     home: async (req, res) => {
@@ -242,9 +245,10 @@ const process = {
         } catch (err) {
             return {success : false, err};
         }
-        
+        console.log(req.body);
         const user = new User(req.body);
         const response = await user.register();
+        console.log(response);
 
         const url = {
             method: "POST",
@@ -405,6 +409,17 @@ const process = {
         return res.status('201').json({success:true, likers:response});
 
     },
+
+    session: async (req, res) => {
+
+        if(await isAuthOwner(req, res)) {
+            console.log("1111111111")
+            return res.status('201').json({success:true});
+        } else {
+            console.log("2222222222")
+            return res.status('201').json({success:false});
+        }
+    }
 }
 
 module.exports = {

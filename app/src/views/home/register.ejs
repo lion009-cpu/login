@@ -4,35 +4,59 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/home/login.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/487301cf1d.js" crossorigin="anonymous"></script>
     <script src="/js/home/register.js" defer></script>
     <title>Document</title>
 </head>
 <body>
-    <div class="login-page">
-        <div class="form">
-          <form class="login-form">
-            <input id="id" type="text" placeholder="닉네임"/>
-            <input id="pwd" type="password" placeholder="비밀번호"/>
-            <input id="confirm-pwd" type="password" placeholder="비밀번호확인"/>
-            <input id="e-mail" type="text" placeholder="이메일"/>
-            <div class="form-radio form-radio-inline">    
-              <label for="radio-f" class="form-radio-label">
-                <input id="radio-f" name="gender" class="form-radio-field" type="radio" required value="F" checked="checked" />
-                <i class="form-radio-button" ></i>
-                <span>여성</span>
-              </label>
-              <label for="radio-m" class="form-radio-label">
-                <input id="radio-m" name="gender" class="form-radio-field" type="radio" required value="M" />
-                <i class="form-radio-button"></i>
-                <span>남성</span>
-              </label>
-            </div>
-            <p id="button">가입</p>
-            <p class="message">회원이라면? <a href="/login">로그인으로 가기</a></p>
-          </form>                 
+  <!-- alert error modal -->
+  <div class="modal fade" id="alertErrorModal" tabindex="-1" role="dialog" aria-labelledby="alertErrorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header alert-header">
+          <h5 class="modal-title" id="alertErrorModalLabel">로그인 상태가 아닙니다.</h5>
+          <button type="button" class="btn-close" id="errorAlertEx" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-      </div>                 
+        <div class="modal-body" id="alertErrorModalBody">
+          <h4><span>로그인 하세요!!!</span></h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+        </div>
+      </div>
+    </div>
+  </div>  
+  <div class="login-page">
+      <div class="form">
+        <form class="login-form">
+          <input id="id" type="text" placeholder="닉네임"/>
+          <input id="pwd" type="password" placeholder="비밀번호"/>
+          <input id="confirm-pwd" type="password" placeholder="비밀번호확인"/>
+          <input id="e-mail" type="text" placeholder="이메일"/>
+          <div class="form-radio form-radio-inline">    
+            <label for="radio-f" class="form-radio-label">
+              <input id="radio-f" name="gender" class="form-radio-field" type="radio" required value="F" checked />
+              <i class="form-radio-button" ></i>
+              <span>여성</span>
+            </label>
+            <label for="radio-m" class="form-radio-label">
+              <input id="radio-m" name="gender" class="form-radio-field" type="radio" required value="M" />
+              <i class="form-radio-button"></i>
+              <span>남성</span>
+            </label>
+          </div>
+          <p id="button">가입</p>
+          <p class="message">회원이라면? <a href="/login">로그인으로 가기</a></p>
+        </form>                 
+      </div>
+    </div>
+    <!-- <script src="/js/home/register.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>                 
 </body>
 </html>
 

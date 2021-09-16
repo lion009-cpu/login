@@ -32,5 +32,6 @@ router.post('/unlike', ctrl.process.unlike);
 router.post('/likers', ctrl.process.likers);
 router.post('/reply', ctrl.process.reply);
 router.post('/getReply', ctrl.process.getReply);
+router.post('/session', ctrl.process.session);
 
 module.exports = router;
